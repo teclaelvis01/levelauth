@@ -3,10 +3,12 @@
 #
 # Subpath en Coolify (convive con https://levelcross.iglesiasalem.com/):
 #   - Dominio / path: levelcross.iglesiasalem.com/auth
+#   - Ports: 3100 (mismo que PORT abajo)
 #   - Strip Prefix: /auth  (el contenedor escucha en /)
 #   - BASE_PATH=/auth (build arg + runtime)
 #   - APP_URL=https://levelcross.iglesiasalem.com/auth
 #   - Google redirect: https://levelcross.iglesiasalem.com/auth/oauth/google/callback
+#   - Red: coolify (external) — sin ella Traefik da 502
 #
 # Subdominio futuro (auth.iglesiasalem.com o *.iglesiasalem.com):
 #   - BASE_PATH=   (vacío)
@@ -46,10 +48,17 @@ services:
       REFRESH_TOKEN_TTL_DAYS: ${REFRESH_TOKEN_TTL_DAYS:-7}
       ALLOW_OPEN_SETUP: ${ALLOW_OPEN_SETUP:-false}
       WEB_DIST: /app/web/dist
-    ports:
-      - "${AUTH_HOST_PORT:-3100}:3100"
+    # Coolify/Traefik habla por la red Docker; no hace falta publicar al host.
+    expose:
+      - "3100"
     volumes:
       - authlevel_uploads_prod:/app/uploads
+    networks:
+      - coolify
 
 volumes:
   authlevel_uploads_prod:
+
+networks:
+  coolify:
+    external: true

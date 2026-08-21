@@ -74,9 +74,10 @@ app.get('*', async (c) => {
 })
 
 const port = env.port
+const hostname = process.env.HOST || '0.0.0.0'
 console.log(
-  `authlevel API on http://localhost:${port}` +
+  `authlevel API on http://${hostname}:${port}` +
   `${env.basePath ? ` · BASE_PATH=${env.basePath}` : ''}` +
   `${webDevUrl ? ` · SPA (HMR) → ${webDevUrl}` : ` · SPA → ${webDist}`}`
 )
-serve({ fetch: app.fetch, port })
+serve({ fetch: app.fetch, port, hostname })
