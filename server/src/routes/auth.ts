@@ -8,6 +8,7 @@ import {
   ensureDefaultAccessRows,
   getAccessLevel,
   issueAppToken,
+  revokeAppToken,
   revokeSession
 } from '@/lib/access.js'
 import {
@@ -41,7 +42,14 @@ function publicAvatarUrl (avatarUrl: string | null): string | null {
   return env.externalPath(avatarUrl)
 }
 
-function publicUser (user: { id: number, email: string, name: string, avatarUrl: string | null, role: string, blockedAt: Date | null, googleSub: string | null }) {
+/** Avatar absoluto para clientes OAuth en otro origen (p. ej. leveladmin). */
+function absoluteAvatarUrl (avatarUrl: string | null): string | null {
+  if (!avatarUrl) return null
+  if (/^https?:\/\//i.test(avatarUrl)) return avatarUrl
+  return env.publicUrl(avatarUrl.startsWith('/') ? avatarUrl : `/${avatarUrl}`)
+}
+
+function publicUser (user: { id: number, email: string, name: string, avatarUrl: string | null, role: string, blockedAt: Date | null, deletedAt?: Date | null, googleSub: string | null }) {
   return {
     id: user.id,
     email: user.email,
@@ -49,6 +57,7 @@ function publicUser (user: { id: number, email: string, name: string, avatarUrl:
     avatarUrl: publicAvatarUrl(user.avatarUrl),
     role: user.role,
     blocked: Boolean(user.blockedAt),
+    deleted: Boolean(user.deletedAt),
     googleLinked: Boolean(user.googleSub)
   }
 }
@@ -165,6 +174,7 @@ authRoutes.get('/oauth/google/callback', async (c) => {
   })
 
   if (user.blockedAt) return fail('blocked')
+  if (user.deletedAt) return fail('deleted')
 
   const { sessionId, cookieValue, expiresAt } = await createSession({
     userId: user.id,
@@ -229,6 +239,31 @@ authRoutes.get('/oauth/authorize', async (c) => {
 authRoutes.post('/oauth/logout', async (c) => {
   const sessionId = c.get('sessionId')
   if (sessionId) await revokeSession(sessionId)
+
+  // Clientes de app (leveladmin, etc.): revocan su access/refresh token.
+  const body = await c.req.json().catch(() => ({})) as {
+    token?: string
+    access_token?: string
+    refresh_token?: string
+  }
+  const rawToken = String(
+    body.token ||
+    body.access_token ||
+    c.req.header('authorization')?.replace(/^Bearer\s+/i, '') ||
+    ''
+  ).trim()
+  const refreshToken = String(body.refresh_token || '').trim()
+
+  if (rawToken) {
+    const claims = await verifyAccessToken(rawToken)
+    if (claims?.tid) await revokeAppToken(claims.tid)
+  } else if (refreshToken) {
+    const token = await prisma.appToken.findUnique({
+      where: { refreshHash: hashToken(refreshToken) }
+    })
+    if (token && !token.revokedAt) await revokeAppToken(token.id)
+  }
+
   deleteCookie(c, SESSION_COOKIE, {
     path: '/',
     ...(env.cookieDomain && env.cookieDomain !== 'localhost' ? { domain: env.cookieDomain } : {})
@@ -250,10 +285,45 @@ authRoutes.post('/oauth/verify', async (c) => {
   const body = await c.req.json().catch(() => ({})) as { token?: string }
   const token = String(body.token || c.req.header('authorization')?.replace(/^Bearer\s+/i, '') || '')
   const claims = await verifyAccessToken(token)
-  if (!claims) return c.json({ valid: false }, 401)
-  const user = await prisma.user.findUnique({ where: { id: Number(claims.sub) } })
-  if (!user || user.blockedAt) return c.json({ valid: false }, 401)
-  return c.json({ valid: true, claims })
+  if (!claims?.tid) return c.json({ valid: false }, 401)
+
+  const now = new Date()
+  const appToken = await prisma.appToken.findUnique({
+    where: { id: claims.tid },
+    include: { user: true, session: true }
+  })
+
+  if (
+    !appToken ||
+    String(appToken.userId) !== claims.sub ||
+    appToken.app !== claims.app ||
+    appToken.revokedAt ||
+    appToken.expiresAt < now ||
+    appToken.session.revokedAt ||
+    appToken.session.expiresAt < now ||
+    appToken.user.blockedAt ||
+    appToken.user.deletedAt
+  ) {
+    return c.json({ valid: false }, 401)
+  }
+
+  await prisma.appToken.update({
+    where: { id: appToken.id },
+    data: { lastUsedAt: now }
+  })
+
+  return c.json({
+    valid: true,
+    claims: {
+      ...claims,
+      level: appToken.accessLevel
+    },
+    user: {
+      name: appToken.user.name,
+      email: appToken.user.email,
+      avatarUrl: absoluteAvatarUrl(appToken.user.avatarUrl)
+    }
+  })
 })
 
 authRoutes.post('/oauth/refresh', async (c) => {
@@ -271,6 +341,7 @@ authRoutes.post('/oauth/refresh', async (c) => {
     token.revokedAt ||
     token.expiresAt < now ||
     token.user.blockedAt ||
+    token.user.deletedAt ||
     token.session.revokedAt ||
     token.session.expiresAt < now
   ) {

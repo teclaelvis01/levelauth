@@ -9,3 +9,5 @@ web/dist/
 uploads/
 *.log
 npm-shrinkwrap.json
+.pnpm-store/
+pnpm-debug.log*

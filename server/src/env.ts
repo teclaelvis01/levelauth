@@ -89,6 +89,30 @@ export const env = {
   isDev: (process.env.NODE_ENV || 'development') !== 'production',
 
   /**
+   * Orígenes permitidos para clientes OAuth (leveladmin, etc.).
+   * Lista separada por comas. En desarrollo, si está vacío, se permiten
+   * localhost típicos (5173/5174) + WEB_DEV_URL.
+   */
+  corsOrigins (): string[] {
+    const raw = (process.env.CORS_ORIGINS || '').trim()
+    if (raw) {
+      return raw.split(',').map((o) => o.trim().replace(/\/+$/, '')).filter(Boolean)
+    }
+    if (env.isDev) {
+      const defaults = [
+        'http://localhost:5173',
+        'http://localhost:5174',
+        'http://127.0.0.1:5173',
+        'http://127.0.0.1:5174'
+      ]
+      const webDev = (process.env.WEB_DEV_URL || '').trim().replace(/\/+$/, '')
+      if (webDev) defaults.push(webDev)
+      return [...new Set(defaults)]
+    }
+    return []
+  },
+
+  /**
    * Ruta visible en el navegador (incluye BASE_PATH).
    * Coolify con StripPrefix(`/auth`): el contenedor sirve en `/`, pero los
    * Location de redirect deben ir a `/auth/...`.

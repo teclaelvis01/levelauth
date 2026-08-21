@@ -15,12 +15,15 @@ model User {
   googleSub String?   @unique
   role      String    @default("user") // user | admin
   blockedAt DateTime?
+  deletedAt DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
   access    UserAppAccess[]
   sessions  Session[]
   appTokens AppToken[]
+
+  @@index([deletedAt])
 }
 
 model UserAppAccess {

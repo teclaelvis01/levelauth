@@ -2,11 +2,21 @@ import type { User } from '@prisma/client'
 import { prisma } from '@/db.js'
 import { APPS, type AccessLevel, type AppId, env } from '@/env.js'
 import { hashToken, randomToken, signAccessToken, signCookieValue } from '@/lib/crypto.js'
+import {
+  notifyAccessRevoked,
+  notifySessionRevoked,
+  notifySessionsChanged,
+  notifyTokenRevoked
+} from '@/lib/realtime.js'
 
 export const SESSION_COOKIE = 'authlevel_sid'
 
 export function isBlocked (user: Pick<User, 'blockedAt'>): boolean {
   return Boolean(user.blockedAt)
+}
+
+export function isDeleted (user: Pick<User, 'deletedAt'>): boolean {
+  return Boolean(user.deletedAt)
 }
 
 export async function getAccessLevel (userId: number, app: string): Promise<AccessLevel> {
@@ -77,10 +87,12 @@ export async function issueAppToken (opts: {
     sid: opts.sessionId,
     tid: token.id,
   })
+  notifySessionsChanged()
   return { accessToken, refreshToken, tokenId: token.id }
 }
 
 export async function revokeSession (sessionId: string) {
+  const session = await prisma.session.findUnique({ where: { id: sessionId } })
   const now = new Date()
   await prisma.session.update({
     where: { id: sessionId },
@@ -90,6 +102,11 @@ export async function revokeSession (sessionId: string) {
     where: { sessionId, revokedAt: null },
     data: { revokedAt: now },
   })
+  if (session) {
+    notifySessionRevoked({ sessionId, userId: session.userId })
+  } else {
+    notifySessionsChanged()
+  }
 }
 
 export async function revokeUserSessions (userId: number) {
@@ -102,6 +119,22 @@ export async function revokeUserSessions (userId: number) {
     where: { userId, revokedAt: null },
     data: { revokedAt: now },
   })
+  notifyAccessRevoked(userId)
+}
+
+export async function revokeAppToken (tokenId: string) {
+  const token = await prisma.appToken.findUnique({ where: { id: tokenId } })
+  if (!token || token.revokedAt) return false
+  await prisma.appToken.update({
+    where: { id: tokenId },
+    data: { revokedAt: new Date() }
+  })
+  notifyTokenRevoked({
+    tokenId: token.id,
+    sessionId: token.sessionId,
+    userId: token.userId
+  })
+  return true
 }
 
 export function activeWhere () {

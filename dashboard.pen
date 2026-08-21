@@ -6,7 +6,7 @@
       "id": "g3heP",
       "x": 0,
       "y": 0,
-      "name": "Dashboard \u2014 Sesiones activas",
+      "name": "Dashboard — Sesiones activas",
       "clip": true,
       "width": 1440,
       "height": 900,
@@ -212,37 +212,34 @@
                       "id": "wEMsg",
                       "name": "Admin user chip",
                       "width": "fill_container",
-                      "gap": 10,
-                      "alignItems": "center",
-                      "padding": [
-                        8,
-                        8
-                      ],
                       "fill": "$sidebarActive",
                       "cornerRadius": 10,
+                      "gap": 10,
+                      "padding": 8,
+                      "alignItems": "center",
                       "children": [
                         {
                           "type": "frame",
                           "id": "pjJeN",
                           "name": "Avatar",
+                          "clip": true,
                           "width": 32,
                           "height": 32,
-                          "cornerRadius": 999,
-                          "clip": true,
                           "fill": {
                             "type": "image",
+                            "enabled": true,
                             "url": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop",
                             "mode": "fill"
                           },
-                          "children": []
+                          "cornerRadius": 999
                         },
                         {
                           "type": "frame",
                           "id": "wWotZ",
                           "name": "Admin meta",
+                          "width": "fill_container",
                           "layout": "vertical",
                           "gap": 2,
-                          "width": "fill_container",
                           "children": [
                             {
                               "type": "text",
@@ -276,10 +273,6 @@
                       "height": 40,
                       "fill": "#00000000",
                       "cornerRadius": 8,
-                      "stroke": {
-                        "thickness": 1,
-                        "fill": "#2A4554"
-                      },
                       "gap": 8,
                       "justifyContent": "center",
                       "alignItems": "center",
@@ -297,9 +290,9 @@
                         {
                           "type": "text",
                           "id": "t0IlY",
-                          "name": "Cerrar sesi\u00f3n",
+                          "name": "Cerrar sesión",
                           "fill": "$sidebarMuted",
-                          "content": "Cerrar sesi\u00f3n",
+                          "content": "Cerrar sesión",
                           "fontFamily": "$bodyFont",
                           "fontSize": 12,
                           "fontWeight": "600"
@@ -689,9 +682,9 @@
                         {
                           "type": "text",
                           "id": "oQDHj",
-                          "name": "erp \u00b7 games \u00b7 setlists",
+                          "name": "erp · games · setlists",
                           "fill": "$muted",
-                          "content": "erp \u00b7 games \u00b7 setlists",
+                          "content": "erp · games · setlists",
                           "fontFamily": "$bodyFont",
                           "fontSize": 11,
                           "fontWeight": "500"
@@ -940,18 +933,18 @@
                                   "type": "frame",
                                   "id": "Kyikd",
                                   "name": "Avatar",
+                                  "clip": true,
                                   "width": 28,
                                   "height": 28,
                                   "fill": {
                                     "type": "image",
+                                    "enabled": true,
                                     "url": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
                                     "mode": "fill"
                                   },
                                   "cornerRadius": 999,
                                   "justifyContent": "center",
-                                  "alignItems": "center",
-                                  "children": [],
-                                  "clip": true
+                                  "alignItems": "center"
                                 },
                                 {
                                   "type": "text",
@@ -1176,18 +1169,18 @@
                                   "type": "frame",
                                   "id": "iHMEL",
                                   "name": "Avatar",
+                                  "clip": true,
                                   "width": 28,
                                   "height": 28,
                                   "fill": {
                                     "type": "image",
+                                    "enabled": true,
                                     "url": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
                                     "mode": "fill"
                                   },
                                   "cornerRadius": 999,
                                   "justifyContent": "center",
-                                  "alignItems": "center",
-                                  "children": [],
-                                  "clip": true
+                                  "alignItems": "center"
                                 },
                                 {
                                   "type": "text",
@@ -1412,18 +1405,18 @@
                                   "type": "frame",
                                   "id": "rfeA5",
                                   "name": "Avatar",
+                                  "clip": true,
                                   "width": 28,
                                   "height": 28,
                                   "fill": {
                                     "type": "image",
+                                    "enabled": true,
                                     "url": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop",
                                     "mode": "fill"
                                   },
                                   "cornerRadius": 999,
                                   "justifyContent": "center",
-                                  "alignItems": "center",
-                                  "children": [],
-                                  "clip": true
+                                  "alignItems": "center"
                                 },
                                 {
                                   "type": "text",
@@ -1648,18 +1641,18 @@
                                   "type": "frame",
                                   "id": "2OVdi",
                                   "name": "Avatar",
+                                  "clip": true,
                                   "width": 28,
                                   "height": 28,
                                   "fill": {
                                     "type": "image",
+                                    "enabled": true,
                                     "url": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop",
                                     "mode": "fill"
                                   },
                                   "cornerRadius": 999,
                                   "justifyContent": "center",
-                                  "alignItems": "center",
-                                  "children": [],
-                                  "clip": true
+                                  "alignItems": "center"
                                 },
                                 {
                                   "type": "text",
@@ -1884,18 +1877,18 @@
                                   "type": "frame",
                                   "id": "XX2ez",
                                   "name": "Avatar",
+                                  "clip": true,
                                   "width": 28,
                                   "height": 28,
                                   "fill": {
                                     "type": "image",
+                                    "enabled": true,
                                     "url": "https://images.unsplash.com/photo-1544005313-94a1dd2b2f3e?w=120&h=120&fit=crop",
                                     "mode": "fill"
                                   },
                                   "cornerRadius": 999,
                                   "justifyContent": "center",
-                                  "alignItems": "center",
-                                  "children": [],
-                                  "clip": true
+                                  "alignItems": "center"
                                 },
                                 {
                                   "type": "text",
@@ -2102,7 +2095,7 @@
       "id": "GNGj9",
       "x": 1520,
       "y": 0,
-      "name": "Dashboard \u2014 Usuarios",
+      "name": "Dashboard — Usuarios",
       "clip": true,
       "width": 1440,
       "height": 900,
@@ -2308,37 +2301,34 @@
                       "id": "mNIPB",
                       "name": "Admin user chip",
                       "width": "fill_container",
-                      "gap": 10,
-                      "alignItems": "center",
-                      "padding": [
-                        8,
-                        8
-                      ],
                       "fill": "$sidebarActive",
                       "cornerRadius": 10,
+                      "gap": 10,
+                      "padding": 8,
+                      "alignItems": "center",
                       "children": [
                         {
                           "type": "frame",
                           "id": "3OzCV",
                           "name": "Avatar",
+                          "clip": true,
                           "width": 32,
                           "height": 32,
-                          "cornerRadius": 999,
-                          "clip": true,
                           "fill": {
                             "type": "image",
+                            "enabled": true,
                             "url": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop",
                             "mode": "fill"
                           },
-                          "children": []
+                          "cornerRadius": 999
                         },
                         {
                           "type": "frame",
                           "id": "xKzed",
                           "name": "Admin meta",
+                          "width": "fill_container",
                           "layout": "vertical",
                           "gap": 2,
-                          "width": "fill_container",
                           "children": [
                             {
                               "type": "text",
@@ -2372,10 +2362,6 @@
                       "height": 40,
                       "fill": "#00000000",
                       "cornerRadius": 8,
-                      "stroke": {
-                        "thickness": 1,
-                        "fill": "#2A4554"
-                      },
                       "gap": 8,
                       "justifyContent": "center",
                       "alignItems": "center",
@@ -2393,9 +2379,9 @@
                         {
                           "type": "text",
                           "id": "QMdBe",
-                          "name": "Cerrar sesi\u00f3n",
+                          "name": "Cerrar sesión",
                           "fill": "$sidebarMuted",
-                          "content": "Cerrar sesi\u00f3n",
+                          "content": "Cerrar sesión",
                           "fontFamily": "$bodyFont",
                           "fontSize": 12,
                           "fontWeight": "600"
@@ -2705,18 +2691,18 @@
                                   "type": "frame",
                                   "id": "BhU1I",
                                   "name": "Avatar",
+                                  "clip": true,
                                   "width": 28,
                                   "height": 28,
                                   "fill": {
                                     "type": "image",
+                                    "enabled": true,
                                     "url": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
                                     "mode": "fill"
                                   },
                                   "cornerRadius": 999,
                                   "justifyContent": "center",
-                                  "alignItems": "center",
-                                  "children": [],
-                                  "clip": true
+                                  "alignItems": "center"
                                 },
                                 {
                                   "type": "text",
@@ -2797,9 +2783,9 @@
                             {
                               "type": "text",
                               "id": "Nmlol",
-                              "name": "setlists editor \u00b7 erp vi",
+                              "name": "setlists editor · erp vi",
                               "fill": "$muted",
-                              "content": "setlists editor \u00b7 erp viewer",
+                              "content": "setlists editor · erp viewer",
                               "fontFamily": "$bodyFont",
                               "fontSize": 11,
                               "fontWeight": "500"
@@ -2907,18 +2893,18 @@
                                   "type": "frame",
                                   "id": "d76DW",
                                   "name": "Avatar",
+                                  "clip": true,
                                   "width": 28,
                                   "height": 28,
                                   "fill": {
                                     "type": "image",
+                                    "enabled": true,
                                     "url": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
                                     "mode": "fill"
                                   },
                                   "cornerRadius": 999,
                                   "justifyContent": "center",
-                                  "alignItems": "center",
-                                  "children": [],
-                                  "clip": true
+                                  "alignItems": "center"
                                 },
                                 {
                                   "type": "text",
@@ -3109,18 +3095,18 @@
                                   "type": "frame",
                                   "id": "LjRpe",
                                   "name": "Avatar",
+                                  "clip": true,
                                   "width": 28,
                                   "height": 28,
                                   "fill": {
                                     "type": "image",
+                                    "enabled": true,
                                     "url": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop",
                                     "mode": "fill"
                                   },
                                   "cornerRadius": 999,
                                   "justifyContent": "center",
-                                  "alignItems": "center",
-                                  "children": [],
-                                  "clip": true
+                                  "alignItems": "center"
                                 },
                                 {
                                   "type": "text",
@@ -3311,18 +3297,18 @@
                                   "type": "frame",
                                   "id": "NdZNS",
                                   "name": "Avatar",
+                                  "clip": true,
                                   "width": 28,
                                   "height": 28,
                                   "fill": {
                                     "type": "image",
+                                    "enabled": true,
                                     "url": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop",
                                     "mode": "fill"
                                   },
                                   "cornerRadius": 999,
                                   "justifyContent": "center",
-                                  "alignItems": "center",
-                                  "children": [],
-                                  "clip": true
+                                  "alignItems": "center"
                                 },
                                 {
                                   "type": "text",
@@ -3495,7 +3481,7 @@
       "id": "zanjr",
       "x": 3040,
       "y": 0,
-      "name": "Dashboard \u2014 Ficha usuario",
+      "name": "Dashboard — Ficha usuario",
       "clip": true,
       "width": 1440,
       "height": 900,
@@ -3701,37 +3687,34 @@
                       "id": "W5az3",
                       "name": "Admin user chip",
                       "width": "fill_container",
-                      "gap": 10,
-                      "alignItems": "center",
-                      "padding": [
-                        8,
-                        8
-                      ],
                       "fill": "$sidebarActive",
                       "cornerRadius": 10,
+                      "gap": 10,
+                      "padding": 8,
+                      "alignItems": "center",
                       "children": [
                         {
                           "type": "frame",
                           "id": "Btqqn",
                           "name": "Avatar",
+                          "clip": true,
                           "width": 32,
                           "height": 32,
-                          "cornerRadius": 999,
-                          "clip": true,
                           "fill": {
                             "type": "image",
+                            "enabled": true,
                             "url": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop",
                             "mode": "fill"
                           },
-                          "children": []
+                          "cornerRadius": 999
                         },
                         {
                           "type": "frame",
                           "id": "p6asJ",
                           "name": "Admin meta",
+                          "width": "fill_container",
                           "layout": "vertical",
                           "gap": 2,
-                          "width": "fill_container",
                           "children": [
                             {
                               "type": "text",
@@ -3765,10 +3748,6 @@
                       "height": 40,
                       "fill": "#00000000",
                       "cornerRadius": 8,
-                      "stroke": {
-                        "thickness": 1,
-                        "fill": "#2A4554"
-                      },
                       "gap": 8,
                       "justifyContent": "center",
                       "alignItems": "center",
@@ -3786,9 +3765,9 @@
                         {
                           "type": "text",
                           "id": "56xdi",
-                          "name": "Cerrar sesi\u00f3n",
+                          "name": "Cerrar sesión",
                           "fill": "$sidebarMuted",
-                          "content": "Cerrar sesi\u00f3n",
+                          "content": "Cerrar sesión",
                           "fontFamily": "$bodyFont",
                           "fontSize": 12,
                           "fontWeight": "600"
@@ -3840,9 +3819,9 @@
                         {
                           "type": "text",
                           "id": "U8XHB",
-                          "name": "Ficha \u00b7 tokens activos \u00b7",
+                          "name": "Ficha · tokens activos ·",
                           "fill": "$muted",
-                          "content": "Ficha \u00b7 tokens activos \u00b7 niveles por app",
+                          "content": "Ficha · tokens activos · niveles por app",
                           "fontFamily": "$bodyFont",
                           "fontSize": 13,
                           "fontWeight": "500"
@@ -3949,9 +3928,9 @@
                             {
                               "type": "text",
                               "id": "I9JvD",
-                              "name": "Vista previa \u00b7 Google o subi",
+                              "name": "Vista previa · Google o subi",
                               "fill": "$muted",
-                              "content": "Vista previa \u00b7 Google o subida manual. Recorte 150\u00d7150, m\u00e1x. 1 MB.",
+                              "content": "Vista previa · Google o subida manual. Recorte 150×150, máx. 400 KB.",
                               "fontFamily": "$bodyFont",
                               "fontSize": 11,
                               "fontWeight": "500"
@@ -4197,9 +4176,9 @@
                         {
                           "type": "text",
                           "id": "lzzgD",
-                          "name": "googleSub \u00b7 1183...92af",
+                          "name": "googleSub · 1183...92af",
                           "fill": "$muted",
-                          "content": "googleSub \u00b7 1183...92af",
+                          "content": "googleSub · 1183...92af",
                           "fontFamily": "$monoFont",
                           "fontSize": 11,
                           "fontWeight": "500"
@@ -4600,9 +4579,9 @@
                                 {
                                   "type": "text",
                                   "id": "4tvja",
-                                  "name": "Ultimo uso hace 2 min \u00b7 ",
+                                  "name": "Ultimo uso hace 2 min · ",
                                   "fill": "$muted",
-                                  "content": "Ultimo uso hace 2 min \u00b7 expira en 1h 48m",
+                                  "content": "Ultimo uso hace 2 min · expira en 1h 48m",
                                   "fontFamily": "$monoFont",
                                   "fontSize": 11,
                                   "fontWeight": "500"
@@ -4738,9 +4717,9 @@
                                 {
                                   "type": "text",
                                   "id": "tGDro",
-                                  "name": "Ultimo uso hace 40 min \u00b7",
+                                  "name": "Ultimo uso hace 40 min ·",
                                   "fill": "$muted",
-                                  "content": "Ultimo uso hace 40 min \u00b7 expira en 1h 05m",
+                                  "content": "Ultimo uso hace 40 min · expira en 1h 05m",
                                   "fontFamily": "$monoFont",
                                   "fontSize": 11,
                                   "fontWeight": "500"
@@ -4798,7 +4777,7 @@
       "id": "LgdBd",
       "x": 4560,
       "y": 0,
-      "name": "Desktop \u2014 App SSO login",
+      "name": "Desktop — App SSO login",
       "clip": true,
       "width": 1440,
       "height": 900,
@@ -4892,7 +4871,7 @@
       "id": "CZltv",
       "x": 4560,
       "y": 980,
-      "name": "Modal \u2014 Recortar foto",
+      "name": "Modal — Recortar foto",
       "width": 560,
       "height": 640,
       "fill": "$surface",
@@ -4922,9 +4901,9 @@
             {
               "type": "text",
               "id": "RNgum",
-              "name": "Ajusta el recorte a 150\u00d7150 ",
+              "name": "Ajusta el recorte a 150×150 ",
               "fill": "$muted",
-              "content": "Ajusta el recorte a 150\u00d7150 como en setlists",
+              "content": "Ajusta el recorte a 150×150 como en setlists",
               "fontFamily": "$bodyFont",
               "fontSize": 12,
               "fontWeight": "500"
@@ -5071,7 +5050,7 @@
       "id": "hOfs9",
       "x": 0,
       "y": 1100,
-      "name": "Mobile \u2014 Sesiones activas",
+      "name": "Mobile — Sesiones activas",
       "clip": true,
       "width": 390,
       "height": 844,
@@ -5450,18 +5429,18 @@
                           "type": "frame",
                           "id": "dT4u7",
                           "name": "Av",
+                          "clip": true,
                           "width": 32,
                           "height": 32,
                           "fill": {
                             "type": "image",
+                            "enabled": true,
                             "url": "https://images.unsplash.com/photo-1544005313-94a1dd2b2f3e?w=120&h=120&fit=crop",
                             "mode": "fill"
                           },
                           "cornerRadius": 999,
                           "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [],
-                          "clip": true
+                          "alignItems": "center"
                         },
                         {
                           "type": "frame",
@@ -5640,18 +5619,18 @@
                           "type": "frame",
                           "id": "gF8ir",
                           "name": "Av",
+                          "clip": true,
                           "width": 32,
                           "height": 32,
                           "fill": {
                             "type": "image",
+                            "enabled": true,
                             "url": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
                             "mode": "fill"
                           },
                           "cornerRadius": 999,
                           "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [],
-                          "clip": true
+                          "alignItems": "center"
                         },
                         {
                           "type": "frame",
@@ -5830,18 +5809,18 @@
                           "type": "frame",
                           "id": "UDYqB",
                           "name": "Av",
+                          "clip": true,
                           "width": 32,
                           "height": 32,
                           "fill": {
                             "type": "image",
+                            "enabled": true,
                             "url": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
                             "mode": "fill"
                           },
                           "cornerRadius": 999,
                           "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [],
-                          "clip": true
+                          "alignItems": "center"
                         },
                         {
                           "type": "frame",
@@ -5998,19 +5977,13 @@
           "name": "Mobile logout bar",
           "width": "fill_container",
           "fill": "$surface",
-          "stroke": {
-            "thickness": {
-              "top": 1
-            },
-            "fill": "$line"
-          },
+          "gap": 10,
           "padding": [
             10,
             16
           ],
-          "gap": 10,
-          "alignItems": "center",
           "justifyContent": "space_between",
+          "alignItems": "center",
           "children": [
             {
               "type": "frame",
@@ -6023,16 +5996,16 @@
                   "type": "frame",
                   "id": "eiVKf",
                   "name": "Avatar",
+                  "clip": true,
                   "width": 28,
                   "height": 28,
-                  "cornerRadius": 999,
-                  "clip": true,
                   "fill": {
                     "type": "image",
+                    "enabled": true,
                     "url": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop",
                     "mode": "fill"
                   },
-                  "children": []
+                  "cornerRadius": 999
                 },
                 {
                   "type": "text",
@@ -6050,14 +6023,14 @@
               "type": "frame",
               "id": "rSVXy",
               "name": "Logout chip",
+              "fill": "$bg",
+              "cornerRadius": 8,
               "gap": 6,
-              "alignItems": "center",
               "padding": [
                 8,
                 10
               ],
-              "fill": "$bg",
-              "cornerRadius": 8,
+              "alignItems": "center",
               "children": [
                 {
                   "type": "icon",
@@ -6164,7 +6137,7 @@
             {
               "type": "frame",
               "id": "zXmdk",
-              "name": "Tab M\u00e1s",
+              "name": "Tab Más",
               "width": "fill_container",
               "layout": "vertical",
               "gap": 4,
@@ -6183,9 +6156,9 @@
                 {
                   "type": "text",
                   "id": "fTroK",
-                  "name": "M\u00e1s",
+                  "name": "Más",
                   "fill": "$muted",
-                  "content": "M\u00e1s",
+                  "content": "Más",
                   "fontFamily": "$bodyFont",
                   "fontSize": 10,
                   "fontWeight": "600"
@@ -6201,7 +6174,7 @@
       "id": "VvqaT",
       "x": 438,
       "y": 1100,
-      "name": "Mobile \u2014 Usuarios",
+      "name": "Mobile — Usuarios",
       "clip": true,
       "width": 390,
       "height": 844,
@@ -6408,18 +6381,18 @@
                       "type": "frame",
                       "id": "U6hOc",
                       "name": "Av",
+                      "clip": true,
                       "width": 40,
                       "height": 40,
                       "fill": {
                         "type": "image",
+                        "enabled": true,
                         "url": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop",
                         "mode": "fill"
                       },
                       "cornerRadius": 999,
                       "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [],
-                      "clip": true
+                      "alignItems": "center"
                     },
                     {
                       "type": "frame",
@@ -6521,18 +6494,18 @@
                       "type": "frame",
                       "id": "mkNGi",
                       "name": "Av",
+                      "clip": true,
                       "width": 40,
                       "height": 40,
                       "fill": {
                         "type": "image",
+                        "enabled": true,
                         "url": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop",
                         "mode": "fill"
                       },
                       "cornerRadius": 999,
                       "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [],
-                      "clip": true
+                      "alignItems": "center"
                     },
                     {
                       "type": "frame",
@@ -6634,18 +6607,18 @@
                       "type": "frame",
                       "id": "8xxMN",
                       "name": "Av",
+                      "clip": true,
                       "width": 40,
                       "height": 40,
                       "fill": {
                         "type": "image",
+                        "enabled": true,
                         "url": "https://images.unsplash.com/photo-1544005313-94a1dd2b2f3e?w=120&h=120&fit=crop",
                         "mode": "fill"
                       },
                       "cornerRadius": 999,
                       "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [],
-                      "clip": true
+                      "alignItems": "center"
                     },
                     {
                       "type": "frame",
@@ -6732,19 +6705,13 @@
           "name": "Mobile logout bar",
           "width": "fill_container",
           "fill": "$surface",
-          "stroke": {
-            "thickness": {
-              "top": 1
-            },
-            "fill": "$line"
-          },
+          "gap": 10,
           "padding": [
             10,
             16
           ],
-          "gap": 10,
-          "alignItems": "center",
           "justifyContent": "space_between",
+          "alignItems": "center",
           "children": [
             {
               "type": "frame",
@@ -6757,16 +6724,16 @@
                   "type": "frame",
                   "id": "RsmSy",
                   "name": "Avatar",
+                  "clip": true,
                   "width": 28,
                   "height": 28,
-                  "cornerRadius": 999,
-                  "clip": true,
                   "fill": {
                     "type": "image",
+                    "enabled": true,
                     "url": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop",
                     "mode": "fill"
                   },
-                  "children": []
+                  "cornerRadius": 999
                 },
                 {
                   "type": "text",
@@ -6784,14 +6751,14 @@
               "type": "frame",
               "id": "zxIu0",
               "name": "Logout chip",
+              "fill": "$bg",
+              "cornerRadius": 8,
               "gap": 6,
-              "alignItems": "center",
               "padding": [
                 8,
                 10
               ],
-              "fill": "$bg",
-              "cornerRadius": 8,
+              "alignItems": "center",
               "children": [
                 {
                   "type": "icon",
@@ -6898,7 +6865,7 @@
             {
               "type": "frame",
               "id": "oRpGo",
-              "name": "Tab M\u00e1s",
+              "name": "Tab Más",
               "width": "fill_container",
               "layout": "vertical",
               "gap": 4,
@@ -6917,9 +6884,9 @@
                 {
                   "type": "text",
                   "id": "WAJn3",
-                  "name": "M\u00e1s",
+                  "name": "Más",
                   "fill": "$muted",
-                  "content": "M\u00e1s",
+                  "content": "Más",
                   "fontFamily": "$bodyFont",
                   "fontSize": 10,
                   "fontWeight": "600"
@@ -6935,7 +6902,7 @@
       "id": "GHFpF",
       "x": 876,
       "y": 1100,
-      "name": "Mobile \u2014 Ficha usuario",
+      "name": "Mobile — Ficha usuario",
       "clip": true,
       "width": 390,
       "height": 844,
@@ -7779,7 +7746,7 @@
       "id": "i1raT",
       "x": 1314,
       "y": 1100,
-      "name": "Mobile \u2014 App SSO login",
+      "name": "Mobile — App SSO login",
       "clip": true,
       "width": 390,
       "height": 844,
@@ -7876,9 +7843,9 @@
             {
               "type": "text",
               "id": "mDzfo",
-              "name": "Inicia sesi\u00f3n para continuar",
+              "name": "Inicia sesión para continuar",
               "fill": "$muted",
-              "content": "Inicia sesi\u00f3n para continuar a setlists",
+              "content": "Inicia sesión para continuar a setlists",
               "fontFamily": "$bodyFont",
               "fontSize": 13,
               "fontWeight": "500"
@@ -7936,7 +7903,7 @@
       "id": "oPOI3",
       "x": 1752,
       "y": 1100,
-      "name": "Mobile \u2014 Recortar foto",
+      "name": "Mobile — Recortar foto",
       "clip": true,
       "width": 390,
       "height": 844,
@@ -8097,9 +8064,9 @@
             {
               "type": "text",
               "id": "w43hg",
-              "name": "Ajusta el zoom \u00b7 150\u00d7150",
+              "name": "Ajusta el zoom · 150×150",
               "fill": "$muted",
-              "content": "Ajusta el zoom \u00b7 150\u00d7150",
+              "content": "Ajusta el zoom · 150×150",
               "fontFamily": "$bodyFont",
               "fontSize": 12,
               "fontWeight": "500"
@@ -8163,9 +8130,9 @@
       "id": "Xd5Ir",
       "x": 0,
       "y": 1064,
-      "name": "Mobile \u00b7 Sesiones",
+      "name": "Mobile · Sesiones",
       "fill": "$muted",
-      "content": "Mobile \u00b7 Sesiones",
+      "content": "Mobile · Sesiones",
       "fontFamily": "$bodyFont",
       "fontSize": 13,
       "fontWeight": "600"
@@ -8175,9 +8142,9 @@
       "id": "hCjog",
       "x": 438,
       "y": 1064,
-      "name": "Mobile \u00b7 Usuarios",
+      "name": "Mobile · Usuarios",
       "fill": "$muted",
-      "content": "Mobile \u00b7 Usuarios",
+      "content": "Mobile · Usuarios",
       "fontFamily": "$bodyFont",
       "fontSize": 13,
       "fontWeight": "600"
@@ -8187,9 +8154,9 @@
       "id": "8RRpM",
       "x": 876,
       "y": 1064,
-      "name": "Mobile \u00b7 Ficha",
+      "name": "Mobile · Ficha",
       "fill": "$muted",
-      "content": "Mobile \u00b7 Ficha",
+      "content": "Mobile · Ficha",
       "fontFamily": "$bodyFont",
       "fontSize": 13,
       "fontWeight": "600"
@@ -8199,9 +8166,9 @@
       "id": "Fg2ZU",
       "x": 1314,
       "y": 1064,
-      "name": "Mobile \u00b7 Login",
+      "name": "Mobile · Login",
       "fill": "$muted",
-      "content": "Mobile \u00b7 Login",
+      "content": "Mobile · Login",
       "fontFamily": "$bodyFont",
       "fontSize": 13,
       "fontWeight": "600"
@@ -8211,9 +8178,9 @@
       "id": "TAhZh",
       "x": 1752,
       "y": 1064,
-      "name": "Mobile \u00b7 Crop",
+      "name": "Mobile · Crop",
       "fill": "$muted",
-      "content": "Mobile \u00b7 Crop",
+      "content": "Mobile · Crop",
       "fontFamily": "$bodyFont",
       "fontSize": 13,
       "fontWeight": "600"
@@ -8223,9 +8190,9 @@
       "id": "5dHeS",
       "x": 0,
       "y": -36,
-      "name": "Desktop \u00b7 Sesiones",
+      "name": "Desktop · Sesiones",
       "fill": "$muted",
-      "content": "Desktop \u00b7 Sesiones",
+      "content": "Desktop · Sesiones",
       "fontFamily": "$bodyFont",
       "fontSize": 13,
       "fontWeight": "600"
@@ -8235,9 +8202,9 @@
       "id": "nYF6G",
       "x": 1520,
       "y": -36,
-      "name": "Desktop \u00b7 Usuarios",
+      "name": "Desktop · Usuarios",
       "fill": "$muted",
-      "content": "Desktop \u00b7 Usuarios",
+      "content": "Desktop · Usuarios",
       "fontFamily": "$bodyFont",
       "fontSize": 13,
       "fontWeight": "600"
@@ -8247,9 +8214,9 @@
       "id": "utaCb",
       "x": 3040,
       "y": -36,
-      "name": "Desktop \u00b7 Ficha",
+      "name": "Desktop · Ficha",
       "fill": "$muted",
-      "content": "Desktop \u00b7 Ficha",
+      "content": "Desktop · Ficha",
       "fontFamily": "$bodyFont",
       "fontSize": 13,
       "fontWeight": "600"
@@ -8259,9 +8226,9 @@
       "id": "b3k10",
       "x": 4560,
       "y": -36,
-      "name": "Desktop \u00b7 Login",
+      "name": "Desktop · Login",
       "fill": "$muted",
-      "content": "Desktop \u00b7 Login",
+      "content": "Desktop · Login",
       "fontFamily": "$bodyFont",
       "fontSize": 13,
       "fontWeight": "600"
@@ -8269,13 +8236,13 @@
     {
       "type": "frame",
       "id": "Junhj",
-      "name": "Desktop \u2014 Bootstrap setup",
       "x": 6080,
       "y": 0,
+      "name": "Desktop — Bootstrap setup",
+      "clip": true,
       "width": 1440,
       "height": 900,
       "fill": "$bg",
-      "clip": true,
       "layout": "vertical",
       "justifyContent": "center",
       "alignItems": "center",
@@ -8287,10 +8254,6 @@
           "width": 440,
           "fill": "$surface",
           "cornerRadius": 16,
-          "stroke": {
-            "thickness": 1,
-            "fill": "$line"
-          },
           "layout": "vertical",
           "gap": 18,
           "padding": 32,
@@ -8308,9 +8271,9 @@
             {
               "type": "text",
               "id": "cA9EG",
-              "name": "Configuraci\u00f3n inicial",
+              "name": "Configuración inicial",
               "fill": "$ink",
-              "content": "Configuraci\u00f3n inicial",
+              "content": "Configuración inicial",
               "fontFamily": "$bodyFont",
               "fontSize": 24,
               "fontWeight": "700"
@@ -8318,9 +8281,9 @@
             {
               "type": "text",
               "id": "iWJUn",
-              "name": "No hay administrador todav\u00eda",
+              "name": "No hay administrador todavía",
               "fill": "$muted",
-              "content": "No hay administrador todav\u00eda. Define el correo Google del admin. Despu\u00e9s inicia sesi\u00f3n con esa misma cuenta.",
+              "content": "No hay administrador todavía. Define el correo Google del admin. Después inicia sesión con esa misma cuenta.",
               "fontFamily": "$bodyFont",
               "fontSize": 13,
               "fontWeight": "500"
@@ -8330,14 +8293,14 @@
               "id": "L3jP5",
               "name": "Steps",
               "width": "fill_container",
+              "fill": "$bg",
+              "cornerRadius": 10,
               "layout": "vertical",
               "gap": 8,
               "padding": [
                 12,
                 14
               ],
-              "fill": "$bg",
-              "cornerRadius": 10,
               "children": [
                 {
                   "type": "text",
@@ -8352,9 +8315,9 @@
                 {
                   "type": "text",
                   "id": "q1YI7",
-                  "name": "2. Contin\u00faa con Google usand",
+                  "name": "2. Continúa con Google usand",
                   "fill": "$ink",
-                  "content": "2. Contin\u00faa con Google usando ese correo",
+                  "content": "2. Continúa con Google usando ese correo",
                   "fontFamily": "$bodyFont",
                   "fontSize": 12,
                   "fontWeight": "600"
@@ -8397,10 +8360,6 @@
                   "height": 44,
                   "fill": "$bg",
                   "cornerRadius": 8,
-                  "stroke": {
-                    "thickness": 1,
-                    "fill": "$line"
-                  },
                   "padding": [
                     0,
                     12
@@ -8449,7 +8408,7 @@
               "id": "q4XV3",
               "name": "Solo disponible la primera v",
               "fill": "$muted",
-              "content": "Solo disponible la primera vez, cuando el sistema est\u00e1 vac\u00edo.",
+              "content": "Solo disponible la primera vez, cuando el sistema está vacío.",
               "fontFamily": "$bodyFont",
               "fontSize": 11,
               "fontWeight": "500"
@@ -8461,13 +8420,13 @@
     {
       "type": "frame",
       "id": "twZfU",
-      "name": "Desktop \u2014 Admin login",
       "x": 7600,
       "y": 0,
+      "name": "Desktop — Admin login",
+      "clip": true,
       "width": 1440,
       "height": 900,
       "fill": "$bg",
-      "clip": true,
       "layout": "vertical",
       "justifyContent": "center",
       "alignItems": "center",
@@ -8479,10 +8438,6 @@
           "width": 440,
           "fill": "$surface",
           "cornerRadius": 16,
-          "stroke": {
-            "thickness": 1,
-            "fill": "$line"
-          },
           "layout": "vertical",
           "gap": 18,
           "padding": 32,
@@ -8500,9 +8455,9 @@
             {
               "type": "text",
               "id": "PVyL1",
-              "name": "Iniciar sesi\u00f3n",
+              "name": "Iniciar sesión",
               "fill": "$ink",
-              "content": "Iniciar sesi\u00f3n",
+              "content": "Iniciar sesión",
               "fontFamily": "$bodyFont",
               "fontSize": 24,
               "fontWeight": "700"
@@ -8575,8 +8530,7 @@
                   "name": "line1",
                   "width": "fill_container",
                   "height": 1,
-                  "fill": "$line",
-                  "children": []
+                  "fill": "$line"
                 },
                 {
                   "type": "text",
@@ -8594,17 +8548,16 @@
                   "name": "line2",
                   "width": "fill_container",
                   "height": 1,
-                  "fill": "$line",
-                  "children": []
+                  "fill": "$line"
                 }
               ]
             },
             {
               "type": "text",
               "id": "clExZ",
-              "name": "\u00bfPrimera vez? Completa el bo",
+              "name": "¿Primera vez? Completa el bo",
               "fill": "$muted",
-              "content": "\u00bfPrimera vez? Completa el bootstrap si a\u00fan no hay admin.",
+              "content": "¿Primera vez? Completa el bootstrap si aún no hay admin.",
               "fontFamily": "$bodyFont",
               "fontSize": 11,
               "fontWeight": "500"
@@ -8617,19 +8570,15 @@
               "height": 40,
               "fill": "$surface",
               "cornerRadius": 8,
-              "stroke": {
-                "thickness": 1,
-                "fill": "$line"
-              },
               "justifyContent": "center",
               "alignItems": "center",
               "children": [
                 {
                   "type": "text",
                   "id": "48c4B",
-                  "name": "Ir a configuraci\u00f3n inicial",
+                  "name": "Ir a configuración inicial",
                   "fill": "$ink",
-                  "content": "Ir a configuraci\u00f3n inicial",
+                  "content": "Ir a configuración inicial",
                   "fontFamily": "$bodyFont",
                   "fontSize": 12,
                   "fontWeight": "600"
@@ -8643,14 +8592,14 @@
     {
       "type": "frame",
       "id": "U1Qhg",
-      "name": "Mobile \u2014 Bootstrap setup",
       "x": 2190,
       "y": 1100,
+      "name": "Mobile — Bootstrap setup",
+      "clip": true,
       "width": 390,
       "height": 844,
       "fill": "$bg",
       "cornerRadius": 28,
-      "clip": true,
       "layout": "vertical",
       "children": [
         {
@@ -8741,9 +8690,9 @@
             {
               "type": "text",
               "id": "fWnu4",
-              "name": "Configuraci\u00f3n inicial",
+              "name": "Configuración inicial",
               "fill": "$ink",
-              "content": "Configuraci\u00f3n inicial",
+              "content": "Configuración inicial",
               "fontFamily": "$bodyFont",
               "fontSize": 22,
               "fontWeight": "700"
@@ -8753,7 +8702,7 @@
               "id": "e1qY3",
               "name": "Define el correo Google del ",
               "fill": "$muted",
-              "content": "Define el correo Google del administrador. Luego inicia sesi\u00f3n con esa cuenta.",
+              "content": "Define el correo Google del administrador. Luego inicia sesión con esa cuenta.",
               "fontFamily": "$bodyFont",
               "fontSize": 13,
               "fontWeight": "500"
@@ -8784,10 +8733,6 @@
                   "height": 44,
                   "fill": "$surface",
                   "cornerRadius": 8,
-                  "stroke": {
-                    "thickness": 1,
-                    "fill": "$line"
-                  },
                   "padding": [
                     0,
                     12
@@ -8838,14 +8783,14 @@
     {
       "type": "frame",
       "id": "0TjZf",
-      "name": "Mobile \u2014 Admin login",
       "x": 2628,
       "y": 1100,
+      "name": "Mobile — Admin login",
+      "clip": true,
       "width": 390,
       "height": 844,
       "fill": "$bg",
       "cornerRadius": 28,
-      "clip": true,
       "layout": "vertical",
       "children": [
         {
@@ -8936,9 +8881,9 @@
             {
               "type": "text",
               "id": "nMs2u",
-              "name": "Iniciar sesi\u00f3n",
+              "name": "Iniciar sesión",
               "fill": "$ink",
-              "content": "Iniciar sesi\u00f3n",
+              "content": "Iniciar sesión",
               "fontFamily": "$bodyFont",
               "fontSize": 22,
               "fontWeight": "700"
@@ -8995,19 +8940,15 @@
               "height": 40,
               "fill": "$surface",
               "cornerRadius": 8,
-              "stroke": {
-                "thickness": 1,
-                "fill": "$line"
-              },
               "justifyContent": "center",
               "alignItems": "center",
               "children": [
                 {
                   "type": "text",
                   "id": "V8hEu",
-                  "name": "Configuraci\u00f3n inicial",
+                  "name": "Configuración inicial",
                   "fill": "$ink",
-                  "content": "Configuraci\u00f3n inicial",
+                  "content": "Configuración inicial",
                   "fontFamily": "$bodyFont",
                   "fontSize": 12,
                   "fontWeight": "600"
@@ -9021,62 +8962,62 @@
     {
       "type": "text",
       "id": "rhCF7",
-      "name": "Desktop \u00b7 Bootstrap",
+      "x": 6080,
+      "y": -36,
+      "name": "Desktop · Bootstrap",
       "fill": "$muted",
-      "content": "Desktop \u00b7 Bootstrap",
+      "content": "Desktop · Bootstrap",
       "fontFamily": "$bodyFont",
       "fontSize": 13,
-      "fontWeight": "600",
-      "x": 6080,
-      "y": -36
+      "fontWeight": "600"
     },
     {
       "type": "text",
       "id": "gezEl",
-      "name": "Desktop \u00b7 Admin login",
+      "x": 7600,
+      "y": -36,
+      "name": "Desktop · Admin login",
       "fill": "$muted",
-      "content": "Desktop \u00b7 Admin login",
+      "content": "Desktop · Admin login",
       "fontFamily": "$bodyFont",
       "fontSize": 13,
-      "fontWeight": "600",
-      "x": 7600,
-      "y": -36
+      "fontWeight": "600"
     },
     {
       "type": "text",
       "id": "nXbkF",
-      "name": "Mobile \u00b7 Bootstrap",
+      "x": 2190,
+      "y": 1064,
+      "name": "Mobile · Bootstrap",
       "fill": "$muted",
-      "content": "Mobile \u00b7 Bootstrap",
+      "content": "Mobile · Bootstrap",
       "fontFamily": "$bodyFont",
       "fontSize": 13,
-      "fontWeight": "600",
-      "x": 2190,
-      "y": 1064
+      "fontWeight": "600"
     },
     {
       "type": "text",
       "id": "6L7RP",
-      "name": "Mobile \u00b7 Admin login",
+      "x": 2628,
+      "y": 1064,
+      "name": "Mobile · Admin login",
       "fill": "$muted",
-      "content": "Mobile \u00b7 Admin login",
+      "content": "Mobile · Admin login",
       "fontFamily": "$bodyFont",
       "fontSize": 13,
-      "fontWeight": "600",
-      "x": 2628,
-      "y": 1064
+      "fontWeight": "600"
     },
     {
       "type": "text",
       "id": "9LF4v",
-      "name": "Desktop \u00b7 App SSO (apps)",
+      "x": 4560,
+      "y": -56,
+      "name": "Desktop · App SSO (apps)",
       "fill": "$muted",
-      "content": "Desktop \u00b7 App SSO (apps)",
+      "content": "Desktop · App SSO (apps)",
       "fontFamily": "$bodyFont",
       "fontSize": 13,
-      "fontWeight": "600",
-      "x": 4560,
-      "y": -56
+      "fontWeight": "600"
     }
   ],
   "variables": {

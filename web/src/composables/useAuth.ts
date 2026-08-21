@@ -8,6 +8,7 @@ export type PublicUser = {
   avatarUrl: string | null
   role: string
   blocked: boolean
+  deleted?: boolean
   googleLinked: boolean
   googleSub?: string | null
   access?: Record<string, string>
@@ -38,8 +39,14 @@ export async function api<T> (url: string, init?: RequestInit): Promise<T> {
     }
   })
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: res.statusText }))
-    throw Object.assign(new Error(err.error || 'request_failed'), { status: res.status, body: err })
+    const err = await res.json().catch(() => ({ error: res.statusText })) as {
+      error?: string
+      message?: string
+    }
+    throw Object.assign(new Error(err.message || err.error || 'request_failed'), {
+      status: res.status,
+      body: err
+    })
   }
   return res.json() as Promise<T>
 }

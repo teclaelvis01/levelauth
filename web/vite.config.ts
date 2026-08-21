@@ -13,7 +13,7 @@ function normalizeBase (raw: string): string {
 function apiProxy (base: string): Record<string, string | ProxyOptions> {
   const prefix = base === '/' ? '' : base.replace(/\/$/, '')
   const target = process.env.API_PROXY_TARGET || 'http://localhost:3100'
-  const paths = ['/api', '/oauth', '/uploads', '/health']
+  const paths = ['/api', '/oauth', '/uploads', '/health', '/ws']
   const out: Record<string, string | ProxyOptions> = {}
   for (const p of paths) {
     const key = `${prefix}${p}`
@@ -21,9 +21,10 @@ function apiProxy (base: string): Record<string, string | ProxyOptions> {
       ? {
           target,
           changeOrigin: true,
+          ws: true,
           rewrite: (reqPath: string) => reqPath.slice(prefix.length) || '/'
         }
-      : target
+      : { target, ws: true }
   }
   return out
 }

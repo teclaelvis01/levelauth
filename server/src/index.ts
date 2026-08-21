@@ -2,6 +2,7 @@ import '@/load-env.js'
 import { serve } from '@hono/node-server'
 import { serveStatic } from '@hono/node-server/serve-static'
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 import { existsSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
@@ -10,10 +11,26 @@ import { env, isGoogleConfigured } from '@/env.js'
 import { loadSession, type AuthVars } from '@/middleware/session.js'
 import { adminRoutes } from '@/routes/admin.js'
 import { authRoutes } from '@/routes/auth.js'
+import { attachRealtime } from '@/routes/realtime.js'
 
 const app = new Hono<{ Variables: AuthVars }>()
 
+app.use('*', cors({
+  origin: (origin) => {
+    if (!origin) return ''
+    const allowed = env.corsOrigins()
+    if (allowed.includes(origin)) return origin
+    return ''
+  },
+  allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization'],
+  exposeHeaders: ['Content-Length'],
+  maxAge: 600
+}))
+
 app.use('*', loadSession)
+
+const { injectWebSocket } = attachRealtime(app)
 app.use('/uploads/*', serveStatic({ root: './' }))
 
 app.route('/', authRoutes)
@@ -54,6 +71,7 @@ app.get('*', async (c) => {
     c.req.path.startsWith('/api') ||
     c.req.path.startsWith('/oauth') ||
     c.req.path.startsWith('/uploads') ||
+    c.req.path.startsWith('/ws') ||
     c.req.path === '/health'
   ) {
     return c.notFound()
@@ -81,4 +99,5 @@ console.log(
   `${env.basePath ? ` · BASE_PATH=${env.basePath}` : ''}` +
   `${webDevUrl ? ` · SPA (HMR) → ${webDevUrl}` : ` · SPA → ${webDist}`}`
 )
-serve({ fetch: app.fetch, port, hostname })
+const server = serve({ fetch: app.fetch, port, hostname })
+injectWebSocket(server)

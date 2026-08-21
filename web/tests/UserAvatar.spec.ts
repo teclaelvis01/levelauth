@@ -3,11 +3,20 @@ import { mount } from '@vue/test-utils'
 import UserAvatar from '@/components/UserAvatar.vue'
 
 describe('UserAvatar', () => {
-  it('shows fallback initial when no avatar', () => {
+  it('shows two initials from full name when no avatar', () => {
+    const wrapper = mount(UserAvatar, {
+      props: {
+        user: { name: 'Neila Vallenilla', email: 'neila@test.com', avatarUrl: null }
+      }
+    })
+    expect(wrapper.text()).toBe('NV')
+  })
+
+  it('shows up to two letters for a single name', () => {
     const wrapper = mount(UserAvatar, {
       props: { user: { name: 'Ana', email: 'ana@test.com', avatarUrl: null } }
     })
-    expect(wrapper.text()).toContain('A')
+    expect(wrapper.text()).toBe('AN')
   })
 
   it('renders image when avatarUrl exists', () => {

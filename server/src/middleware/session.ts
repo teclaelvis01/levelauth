@@ -2,7 +2,7 @@ import { createMiddleware } from 'hono/factory'
 import { getCookie } from 'hono/cookie'
 import type { User } from '@prisma/client'
 import { prisma } from '@/db.js'
-import { SESSION_COOKIE, isBlocked } from '@/lib/access.js'
+import { SESSION_COOKIE, isBlocked, isDeleted } from '@/lib/access.js'
 import { parseCookieValue } from '@/lib/crypto.js'
 
 export type AuthVars = {
@@ -32,7 +32,8 @@ export const loadSession = createMiddleware<{ Variables: AuthVars }>(async (c, n
     session.revokedAt ||
     session.expiresAt.getTime() < Date.now() ||
     session.userId !== payload.uid ||
-    isBlocked(session.user)
+    isBlocked(session.user) ||
+    isDeleted(session.user)
   ) {
     await next()
     return

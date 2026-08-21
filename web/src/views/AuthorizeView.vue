@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, shallowRef } from 'vue'
 import { useRoute } from 'vue-router'
+import AuthErrorNotice from '@/components/AuthErrorNotice.vue'
 import { fetchStatus } from '@/composables/useAuth'
 import { withBase } from '@/lib/base'
 
@@ -16,21 +17,10 @@ const APP_ACCENTS: Record<string, string> = {
   setlists: 'setlists'
 }
 
-const errorMap: Record<string, string> = {
-  oauth_invalid: 'OAuth inválido',
-  oauth_failed: 'Falló el login con Google',
-  email_unverified: 'El correo de Google no está verificado',
-  not_provisioned: 'Usuario no provisionado. Un admin debe crearlo primero.',
-  blocked: 'Cuenta bloqueada',
-  no_app_access: 'No tienes acceso a esta aplicación',
-  invalid_app: 'Aplicación no reconocida',
-  missing_params: 'Faltan parámetros de autorización'
-}
-
 const route = useRoute()
 const googleConfigured = shallowRef(false)
 const ready = shallowRef(false)
-const error = shallowRef('')
+const errorCode = shallowRef('')
 
 const app = computed(() => String(route.query.app || '').trim().toLowerCase())
 const redirectUri = computed(() => String(route.query.redirect_uri || '').trim())
@@ -45,12 +35,12 @@ const googleHref = computed(() => {
 })
 
 const canContinue = computed(() => Boolean(app.value && redirectUri.value && googleConfigured.value))
+const showGoogleCta = computed(() => canContinue.value && errorCode.value !== 'blocked')
 
 onMounted(async () => {
   const status = await fetchStatus(true)
   googleConfigured.value = status.googleConfigured
-  const code = String(route.query.error || '')
-  if (code) error.value = errorMap[code] || code
+  errorCode.value = String(route.query.error || '')
   ready.value = true
 })
 </script>
@@ -61,10 +51,13 @@ onMounted(async () => {
       <p class="auth-brand">
         authlevel
       </p>
-      <h1>Autorizar acceso</h1>
+      <h1>{{ errorCode === 'blocked' ? 'No puedes continuar' : 'Autorizar acceso' }}</h1>
 
       <template v-if="ready">
-        <p class="muted">
+        <p
+          v-if="!errorCode"
+          class="muted"
+        >
           Inicia sesión con Google para continuar en
           <span
             class="app-pill"
@@ -72,12 +65,11 @@ onMounted(async () => {
           >{{ appLabel }}</span>
         </p>
 
-        <p
-          v-if="error"
-          class="flash flash--error"
-        >
-          {{ error }}
-        </p>
+        <AuthErrorNotice
+          v-if="errorCode"
+          :code="errorCode"
+          :app-label="appLabel"
+        />
 
         <p
           v-if="!app || !redirectUri"
@@ -94,10 +86,15 @@ onMounted(async () => {
         </p>
 
         <a
-          v-if="canContinue"
+          v-if="showGoogleCta"
           class="btn btn-google btn--full"
           :href="googleHref"
         >Continuar con Google</a>
+        <a
+          v-else-if="canContinue && errorCode === 'blocked'"
+          class="btn btn--ghost btn--full"
+          :href="googleHref"
+        >Reintentar con otra cuenta</a>
       </template>
     </div>
   </div>

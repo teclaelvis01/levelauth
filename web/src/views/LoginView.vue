@@ -1,34 +1,24 @@
 <script setup lang="ts">
 import { onMounted, shallowRef } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
+import AuthErrorNotice from '@/components/AuthErrorNotice.vue'
 import { fetchStatus } from '@/composables/useAuth'
 import { withBase } from '@/lib/base'
 
 const route = useRoute()
 const googleConfigured = shallowRef(false)
 const redirecting = shallowRef(false)
-const error = shallowRef('')
+const errorCode = shallowRef('')
 const ready = shallowRef(false)
 const loggedOut = shallowRef(false)
-
-const errorMap: Record<string, string> = {
-  oauth_invalid: 'OAuth inválido',
-  oauth_failed: 'Falló el login con Google',
-  email_unverified: 'El correo de Google no está verificado',
-  not_provisioned: 'Usuario no provisionado. Un admin debe crearlo primero.',
-  blocked: 'Cuenta bloqueada',
-  not_admin: 'Tu cuenta no tiene rol admin',
-  no_app_access: 'Sin acceso a esa app'
-}
 
 onMounted(async () => {
   const status = await fetchStatus(true)
   googleConfigured.value = status.googleConfigured
-  const code = String(route.query.error || '')
+  errorCode.value = String(route.query.error || '')
   loggedOut.value = route.query.logged_out === '1'
 
-  if (code) {
-    error.value = errorMap[code] || code
+  if (errorCode.value) {
     ready.value = true
     return
   }
@@ -56,7 +46,7 @@ onMounted(async () => {
       <p class="auth-brand">
         authlevel
       </p>
-      <h1>Iniciar sesión</h1>
+      <h1>{{ errorCode === 'blocked' ? 'No puedes entrar' : 'Iniciar sesión' }}</h1>
 
       <p
         v-if="redirecting"
@@ -66,7 +56,10 @@ onMounted(async () => {
       </p>
 
       <template v-else-if="ready">
-        <p class="muted">
+        <p
+          v-if="!errorCode"
+          class="muted"
+        >
           Accede al panel de authlevel para gestionar usuarios, sesiones y accesos.
         </p>
         <p
@@ -75,12 +68,10 @@ onMounted(async () => {
         >
           Sesión cerrada. Pulsa el botón para volver a entrar.
         </p>
-        <p
-          v-if="error"
-          class="flash flash--error"
-        >
-          {{ error }}
-        </p>
+        <AuthErrorNotice
+          v-if="errorCode"
+          :code="errorCode"
+        />
         <p
           v-if="!googleConfigured"
           class="flash flash--error"
@@ -103,10 +94,15 @@ onMounted(async () => {
           Ir a configuración inicial
         </RouterLink>
         <a
-          v-if="googleConfigured"
+          v-if="googleConfigured && errorCode !== 'blocked'"
           class="btn btn-google btn--full"
           :href="withBase('/oauth/google?intent=admin')"
         >Continuar con Google</a>
+        <a
+          v-else-if="googleConfigured && errorCode === 'blocked'"
+          class="btn btn--ghost btn--full"
+          :href="withBase('/oauth/google?intent=admin')"
+        >Reintentar con otra cuenta</a>
       </template>
     </div>
   </div>
