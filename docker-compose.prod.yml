@@ -60,5 +60,8 @@ volumes:
   authlevel_uploads_prod:
 
 networks:
+  # `name:` evita que Coolify (--project-name=<uuid>) renombre la red a
+  # <uuid> y falle con "network … declared as external, but could not be found".
   coolify:
+    name: coolify
     external: true
