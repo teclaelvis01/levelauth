@@ -1,0 +1,19 @@
+# Path aliases
+
+Always import with the `@/` alias. Never use relative paths (`../` or `./`).
+
+Applies to both `server/` and `web/`.
+
+```ts
+// good
+import { prisma } from '@/db.js'
+import { fetchStatus } from '@/composables/useAuth'
+import UserAvatar from '@/components/UserAvatar.vue'
+
+// bad
+import { prisma } from '../db.js'
+import UserAvatar from './UserAvatar.vue'
+```
+
+- Server: `server/tsconfig.json` + `tsc-alias`
+- Web: `web/vite.config.ts` + `web/tsconfig.json`

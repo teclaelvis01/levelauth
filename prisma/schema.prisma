@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  name      String    @default("")
+  avatarUrl String?   @db.VarChar(1024)
+  googleSub String?   @unique
+  role      String    @default("user") // user | admin
+  blockedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  access    UserAppAccess[]
+  sessions  Session[]
+  appTokens AppToken[]
+}
+
+model UserAppAccess {
+  id     Int    @id @default(autoincrement())
+  userId Int
+  app    String // erp | games | setlists
+  level  String @default("none") // none | viewer | editor | admin
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, app])
+  @@index([app])
+}
+
+model Session {
+  id        String    @id @default(uuid())
+  userId    Int
+  provider  String    @default("google")
+  ip        String?
+  userAgent String?   @db.VarChar(512)
+  createdAt DateTime  @default(now())
+  expiresAt DateTime
+  revokedAt DateTime?
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appTokens AppToken[]
+
+  @@index([userId, revokedAt, expiresAt])
+}
+
+model AppToken {
+  id          String    @id @default(uuid())
+  userId      Int
+  sessionId   String
+  app         String
+  accessLevel String
+  refreshHash String    @unique
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime
+  lastUsedAt  DateTime?
+  revokedAt   DateTime?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session     Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([userId, app])
+  @@index([app, revokedAt, expiresAt])
+  @@index([sessionId])
+}

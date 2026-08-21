@@ -1,0 +1,55 @@
+# Production — MySQL lo aporta Coolify (DB_* estilo Laravel).
+#   docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
+#
+# Subpath en Coolify (convive con https://levelcross.iglesiasalem.com/):
+#   - Dominio / path: levelcross.iglesiasalem.com/auth
+#   - Strip Prefix: /auth  (el contenedor escucha en /)
+#   - BASE_PATH=/auth (build arg + runtime)
+#   - APP_URL=https://levelcross.iglesiasalem.com/auth
+#   - Google redirect: https://levelcross.iglesiasalem.com/auth/oauth/google/callback
+#
+# Subdominio futuro (auth.iglesiasalem.com o *.iglesiasalem.com):
+#   - BASE_PATH=   (vacío)
+#   - APP_URL=https://auth.iglesiasalem.com
+#   - COOKIE_DOMAIN=.iglesiasalem.com
+
+services:
+  auth:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_PATH: ${BASE_PATH:-/auth}
+    image: authlevel:prod
+    container_name: authlevel-app-prod
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: "3100"
+      DB_CONNECTION: ${DB_CONNECTION:-mysql}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DATABASE_URL: ${DATABASE_URL:-}
+      APP_URL: ${APP_URL}
+      BASE_PATH: ${BASE_PATH:-/auth}
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN}
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+      JWT_SECRET: ${JWT_SECRET}
+      SESSION_SECRET: ${SESSION_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      SESSION_TTL_HOURS: ${SESSION_TTL_HOURS:-168}
+      ACCESS_TOKEN_TTL_MINUTES: ${ACCESS_TOKEN_TTL_MINUTES:-15}
+      REFRESH_TOKEN_TTL_DAYS: ${REFRESH_TOKEN_TTL_DAYS:-7}
+      ALLOW_OPEN_SETUP: ${ALLOW_OPEN_SETUP:-false}
+      WEB_DIST: /app/web/dist
+    ports:
+      - "${AUTH_HOST_PORT:-3100}:3100"
+    volumes:
+      - authlevel_uploads_prod:/app/uploads
+
+volumes:
+  authlevel_uploads_prod:

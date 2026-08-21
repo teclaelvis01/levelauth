@@ -1,0 +1,28 @@
+{
+  "name": "authlevel",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.21.0",
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,magenta \"pnpm --filter @authlevel/server dev\" \"pnpm --filter @authlevel/web dev\"",
+    "dev:docker": "docker compose -f docker-compose.dev.yml up --build",
+    "build": "pnpm --filter @authlevel/web build && pnpm --filter @authlevel/server build",
+    "start": "pnpm --filter @authlevel/server start",
+    "lint": "pnpm --filter @authlevel/server lint && pnpm --filter @authlevel/web lint",
+    "test": "pnpm --filter @authlevel/server test && pnpm --filter @authlevel/web test",
+    "db:generate": "PRISMA_GENERATE_SKIP_AUTOINSTALL=1 prisma generate",
+    "db:migrate": "node scripts/migrate-deploy.mjs",
+    "db:migrate:dev": "node scripts/ensure-database-url.mjs prisma migrate dev",
+    "db:migrate:create": "node scripts/ensure-database-url.mjs prisma migrate dev --create-only --name",
+    "db:migrate:status": "node scripts/ensure-database-url.mjs prisma migrate status",
+    "db:push": "node scripts/ensure-database-url.mjs prisma db push"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "prisma": "^6.9.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@prisma/client": "6.19.3"
+  }
+}
