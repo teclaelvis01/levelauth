@@ -33,9 +33,11 @@ COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY server/package.json ./server/
 COPY web/package.json ./web/
 COPY prisma ./prisma
-# --prod: prisma CLI vive en dependencies del server (migrate).
-# @prisma/client postinstall ya genera el client con el schema copiado.
-RUN pnpm install --frozen-lockfile --prod --filter @authlevel/server...
+# --prod: prisma CLI está en dependencies de @authlevel/server (migrate-deploy).
+# El root solo lo tiene en devDependencies → no está disponible con --prod vía `pnpm exec`.
+# @prisma/client postinstall genera el client con el schema copiado.
+RUN pnpm install --frozen-lockfile --prod --filter @authlevel/server... \
+  && node -e "require('node:module').createRequire('/app/server/package.json').resolve('prisma/build/index.js')"
 COPY --from=build /app/server/dist ./server/dist
 COPY --from=build /app/web/dist ./web/dist
 COPY scripts ./scripts
