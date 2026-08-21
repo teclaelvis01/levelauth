@@ -9,6 +9,7 @@ export const router = createRouter({
     { path: '/', name: 'home', component: () => import('@/views/HomeRedirect.vue') },
     { path: '/setup', name: 'setup', component: () => import('@/views/SetupView.vue'), meta: { guest: true } },
     { path: '/login', name: 'login', component: () => import('@/views/LoginView.vue'), meta: { guest: true } },
+    { path: '/authorize', name: 'authorize', component: () => import('@/views/AuthorizeView.vue'), meta: { guest: true, appAuth: true } },
     { path: '/sessions', name: 'sessions', component: () => import('@/views/SessionsView.vue'), meta: { admin: true } },
     { path: '/users', name: 'users', component: () => import('@/views/UsersView.vue'), meta: { admin: true } },
     { path: '/users/new', name: 'users-new', component: () => import('@/views/UserNewView.vue'), meta: { admin: true } },
@@ -21,6 +22,6 @@ router.beforeEach(async (to) => {
   if (status.needsSetup && to.name !== 'setup') return { name: 'setup' }
   if (!status.needsSetup && to.name === 'setup' && !status.allowOpenSetup) return { name: 'login' }
   if (to.meta.admin && (!status.user || status.user.role !== 'admin')) return { name: 'login' }
-  if (to.meta.guest && status.user?.role === 'admin' && to.name !== 'setup') return { name: 'sessions' }
+  if (to.meta.guest && !to.meta.appAuth && status.user?.role === 'admin' && to.name !== 'setup') return { name: 'sessions' }
   return true
 })

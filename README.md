@@ -46,6 +46,7 @@ docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
 |------|-----------|
 | `/setup` | Bootstrap primer admin |
 | `/login` | Login Google al panel |
+| `/authorize` | Consentimiento SSO de apps (`app` + `redirect_uri`) |
 | `/sessions` | Tokens activos |
 | `/users` | Listado + ficha + foto |
 

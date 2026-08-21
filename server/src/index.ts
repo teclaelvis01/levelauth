@@ -46,7 +46,8 @@ const webDist = resolveWebDist()
 const webDevUrl = (process.env.WEB_DEV_URL || '').replace(/\/$/, '')
 const isDev = process.env.NODE_ENV !== 'production'
 
-app.use('/assets/*', serveStatic({ root: webDist }))
+// Vite `public/` + `/assets/*` del build. Si el archivo no existe, sigue al SPA.
+app.use('*', serveStatic({ root: webDist }))
 
 app.get('*', async (c) => {
   if (

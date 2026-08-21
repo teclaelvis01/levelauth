@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { setCookie, deleteCookie } from 'hono/cookie'
 import { prisma } from '@/db.js'
-import { env, isGoogleConfigured } from '@/env.js'
+import { APPS, env, isGoogleConfigured, type AppId } from '@/env.js'
 import {
   SESSION_COOKIE,
   createSession,
@@ -55,6 +55,19 @@ function publicUser (user: { id: number, email: string, name: string, avatarUrl:
 
 function redirectTo (pathWithQuery: string) {
   return env.externalPath(pathWithQuery)
+}
+
+function authorizeErrorRedirect (app: string, redirectUri: string, error: string) {
+  const params = new URLSearchParams({
+    app,
+    redirect_uri: redirectUri,
+    error
+  })
+  return redirectTo(`/authorize?${params.toString()}`)
+}
+
+function isKnownApp (app: string): app is AppId {
+  return (APPS as readonly string[]).includes(app)
 }
 
 authRoutes.get('/api/status', async (c) => {
@@ -117,22 +130,30 @@ authRoutes.get('/oauth/google', async (c) => {
 authRoutes.get('/oauth/google/callback', async (c) => {
   const code = c.req.query('code')
   const state = parseSignedOAuthState(c.req.query('state'))
-  if (!code || !state) return c.redirect(redirectTo('/login?error=oauth_invalid'))
+  const authorizeFlow = Boolean(state?.intent === 'authorize' && state.app && state.redirectUri)
+  const fail = (error: string) => {
+    if (authorizeFlow && state?.app && state.redirectUri) {
+      return c.redirect(authorizeErrorRedirect(state.app, state.redirectUri, error))
+    }
+    return c.redirect(redirectTo(`/login?error=${error}`))
+  }
+
+  if (!code || !state) return fail('oauth_invalid')
 
   let profile
   try {
     profile = await exchangeGoogleCode(code, state.v)
   } catch (err) {
     console.error(err)
-    return c.redirect(redirectTo('/login?error=oauth_failed'))
+    return fail('oauth_failed')
   }
-  if (!profile.emailVerified) return c.redirect(redirectTo('/login?error=email_unverified'))
+  if (!profile.emailVerified) return fail('email_unverified')
 
   let user = await prisma.user.findFirst({
     where: { OR: [{ googleSub: profile.sub }, { email: profile.email }] }
   })
 
-  if (!user) return c.redirect(redirectTo('/login?error=not_provisioned'))
+  if (!user) return fail('not_provisioned')
 
   user = await prisma.user.update({
     where: { id: user.id },
@@ -143,7 +164,7 @@ authRoutes.get('/oauth/google/callback', async (c) => {
     }
   })
 
-  if (user.blockedAt) return c.redirect(redirectTo('/login?error=blocked'))
+  if (user.blockedAt) return fail('blocked')
 
   const { sessionId, cookieValue, expiresAt } = await createSession({
     userId: user.id,
@@ -153,9 +174,9 @@ authRoutes.get('/oauth/google/callback', async (c) => {
   const maxAge = Math.max(1, Math.floor((expiresAt.getTime() - Date.now()) / 1000))
   setCookie(c, SESSION_COOKIE, cookieValue, cookieOpts(maxAge))
 
-  if (state.intent === 'authorize' && state.app && state.redirectUri) {
+  if (authorizeFlow && state.app && state.redirectUri) {
     const level = await getAccessLevel(user.id, state.app)
-    if (level === 'none') return c.redirect(redirectTo('/login?error=no_app_access'))
+    if (level === 'none') return fail('no_app_access')
     const { accessToken, refreshToken } = await issueAppToken({
       userId: user.id,
       sessionId,
@@ -177,21 +198,20 @@ authRoutes.get('/oauth/authorize', async (c) => {
   const app = c.req.query('app')
   const redirectUri = c.req.query('redirect_uri')
   if (!app || !redirectUri) return c.json({ error: 'missing_params' }, 400)
+  if (!isKnownApp(app)) return c.json({ error: 'invalid_app' }, 400)
 
   const user = c.get('user')
   const sessionId = c.get('sessionId')
 
   if (!user || !sessionId) {
-    if (!isGoogleConfigured()) return c.json({ error: 'google_not_configured' }, 500)
-    return c.redirect(
-      env.externalPath(
-        `/oauth/google?intent=authorize&app=${encodeURIComponent(app)}&redirect_uri=${encodeURIComponent(redirectUri)}`
-      )
-    )
+    const params = new URLSearchParams({ app, redirect_uri: redirectUri })
+    return c.redirect(redirectTo(`/authorize?${params.toString()}`))
   }
 
   const level = await getAccessLevel(user.id, app)
-  if (level === 'none') return c.json({ error: 'no_access', app }, 403)
+  if (level === 'none') {
+    return c.redirect(authorizeErrorRedirect(app, redirectUri, 'no_app_access'))
+  }
 
   const { accessToken, refreshToken } = await issueAppToken({
     userId: user.id,
