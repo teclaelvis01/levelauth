@@ -214,6 +214,10 @@ authRoutes.get('/oauth/authorize', async (c) => {
   const sessionId = c.get('sessionId')
 
   if (!user || !sessionId) {
+    if (isGoogleConfigured()) {
+      const params = new URLSearchParams({ intent: 'authorize', app, redirect_uri: redirectUri })
+      return c.redirect(redirectTo(`/oauth/google?${params.toString()}`))
+    }
     const params = new URLSearchParams({ app, redirect_uri: redirectUri })
     return c.redirect(redirectTo(`/authorize?${params.toString()}`))
   }

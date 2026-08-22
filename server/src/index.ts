@@ -20,6 +20,10 @@ app.use('*', cors({
     if (!origin) return ''
     const allowed = env.corsOrigins()
     if (allowed.includes(origin)) return origin
+    // Dev: Vite puede usar 5174, 5175, … si el puerto por defecto está ocupado.
+    if (env.isDev && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+      return origin
+    }
     return ''
   },
   allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

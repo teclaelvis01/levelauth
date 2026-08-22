@@ -26,6 +26,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: authlevel-auth:prod
     container_name: authlevel-app
     restart: unless-stopped
     depends_on:

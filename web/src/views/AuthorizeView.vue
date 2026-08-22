@@ -20,6 +20,7 @@ const APP_ACCENTS: Record<string, string> = {
 const route = useRoute()
 const googleConfigured = shallowRef(false)
 const ready = shallowRef(false)
+const redirecting = shallowRef(false)
 const errorCode = shallowRef('')
 
 const app = computed(() => String(route.query.app || '').trim().toLowerCase())
@@ -41,6 +42,18 @@ onMounted(async () => {
   const status = await fetchStatus(true)
   googleConfigured.value = status.googleConfigured
   errorCode.value = String(route.query.error || '')
+
+  if (errorCode.value || !app.value || !redirectUri.value) {
+    ready.value = true
+    return
+  }
+
+  if (status.googleConfigured) {
+    redirecting.value = true
+    window.location.href = googleHref.value
+    return
+  }
+
   ready.value = true
 })
 </script>
@@ -53,7 +66,14 @@ onMounted(async () => {
       </p>
       <h1>{{ errorCode === 'blocked' ? 'No puedes continuar' : 'Autorizar acceso' }}</h1>
 
-      <template v-if="ready">
+      <p
+        v-if="redirecting"
+        class="muted"
+      >
+        Redirigiendo a Google…
+      </p>
+
+      <template v-else-if="ready">
         <p
           v-if="!errorCode"
           class="muted"
