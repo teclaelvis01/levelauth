@@ -20,8 +20,8 @@ app.use('*', cors({
     if (!origin) return ''
     const allowed = env.corsOrigins()
     if (allowed.includes(origin)) return origin
-    // Dev: Vite puede usar 5174, 5175, … si el puerto por defecto está ocupado.
-    if (env.isDev && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+    // Dev: *.localhost (Traefik), localhost o puertos alternativos de Vite.
+    if (env.isDev && /^https?:\/\/(([\w-]+\.)*localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
       return origin
     }
     return ''

@@ -5,7 +5,7 @@
   "packageManager": "pnpm@11.21.0",
   "scripts": {
     "dev": "concurrently -n server,web -c blue,magenta \"pnpm --filter @authlevel/server dev\" \"pnpm --filter @authlevel/web dev\"",
-    "dev:docker": "docker compose -f docker-compose.dev.yml up --build",
+    "dev:docker": "docker compose up --build",
     "build": "pnpm --filter @authlevel/web build && pnpm --filter @authlevel/server build",
     "start": "pnpm --filter @authlevel/server start",
     "lint": "pnpm --filter @authlevel/server lint && pnpm --filter @authlevel/web lint",

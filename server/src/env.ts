@@ -103,7 +103,10 @@ export const env = {
         'http://localhost:5173',
         'http://localhost:5174',
         'http://127.0.0.1:5173',
-        'http://127.0.0.1:5174'
+        'http://127.0.0.1:5174',
+        'http://leveladmin.localhost',
+        'http://levelweb.localhost',
+        'http://localhost'
       ]
       const webDev = (process.env.WEB_DEV_URL || '').trim().replace(/\/+$/, '')
       if (webDev) defaults.push(webDev)

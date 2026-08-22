@@ -26,10 +26,12 @@ pnpm test
 pnpm build
 ```
 
-Docker local:
+Docker local (hot reload vía Traefik):
 
 ```bash
-docker compose up -d --build
+cp .env.example .env
+pnpm dev:docker
+# http://localhost  (Google OAuth exige localhost, no *.localhost)
 ```
 
 Prod (MySQL en Coolify vía `DB_*` estilo Laravel; sin servicio mysql en el compose):

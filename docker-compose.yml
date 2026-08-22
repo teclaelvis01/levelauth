@@ -1,6 +1,8 @@
-# Stack local “built” (imagen de producción). Sin hot reload.
-# Para desarrollo con HMR: docker compose -f docker-compose.dev.yml up --build
-#   → SPA en http://localhost:5173  ·  API en http://localhost:3100
+# Desarrollo local con hot reload (API + Vite HMR) detrás de Traefik.
+# Requiere: traefik en red levelcross-dev (calificador_tribus_v2/traefik).
+# Uso: docker compose up --build
+#
+# Auth (Google OAuth solo acepta localhost en dev): http://localhost
 
 services:
   mysql:
@@ -21,13 +23,15 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+    networks:
+      - levelcross-dev
 
   auth:
     build:
       context: .
-      dockerfile: Dockerfile
-    image: authlevel-auth:prod
-    container_name: authlevel-app
+      dockerfile: Dockerfile.dev
+    image: authlevel-auth:dev
+    container_name: authlevel-dev
     restart: unless-stopped
     depends_on:
       mysql:
@@ -35,14 +39,19 @@ services:
     env_file:
       - .env
     environment:
+      NODE_ENV: development
       DB_CONNECTION: mysql
       DB_HOST: mysql
       DB_PORT: "3306"
       DB_DATABASE: authlevel
       DB_USERNAME: authlevel
       DB_PASSWORD: authlevel
-      APP_URL: ${APP_URL:-http://localhost:3100}
+      APP_URL: ${APP_URL:-http://localhost}
       PORT: "3100"
+      WEB_DEV_URL: ${WEB_DEV_URL:-http://localhost}
+      VITE_DEV_HOST: localhost
+      API_PROXY_TARGET: http://127.0.0.1:3100
+      CHOKIDAR_USEPOLLING: "true"
       COOKIE_DOMAIN: ${COOKIE_DOMAIN:-localhost}
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
       ALLOW_OPEN_SETUP: ${ALLOW_OPEN_SETUP:-true}
@@ -50,11 +59,36 @@ services:
       SESSION_SECRET: ${SESSION_SECRET}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-    ports:
-      - "3100:3100"
     volumes:
-      - authlevel_uploads:/app/uploads
+      - ./:/app
+      - authlevel_dev_node_modules:/app/node_modules
+      - authlevel_dev_server_nm:/app/server/node_modules
+      - authlevel_dev_web_nm:/app/web/node_modules
+      - authlevel_uploads:/app/server/uploads
+    networks:
+      levelcross-dev:
+        aliases:
+          - levelauth
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.levelauth-api.rule=Host(`localhost`) && (PathPrefix(`/api`) || PathPrefix(`/oauth`) || PathPrefix(`/uploads`) || PathPrefix(`/ws`) || Path(`/health`))
+      - traefik.http.routers.levelauth-api.entrypoints=web
+      - traefik.http.routers.levelauth-api.priority=100
+      - traefik.http.routers.levelauth-api.service=levelauth-api
+      - traefik.http.services.levelauth-api.loadbalancer.server.port=3100
+      - traefik.http.routers.levelauth-web.rule=Host(`localhost`)
+      - traefik.http.routers.levelauth-web.entrypoints=web
+      - traefik.http.routers.levelauth-web.priority=1
+      - traefik.http.routers.levelauth-web.service=levelauth-web
+      - traefik.http.services.levelauth-web.loadbalancer.server.port=5173
+
+networks:
+  levelcross-dev:
+    external: true
 
 volumes:
   authlevel_mysql_data:
   authlevel_uploads:
+  authlevel_dev_node_modules:
+  authlevel_dev_server_nm:
+  authlevel_dev_web_nm:

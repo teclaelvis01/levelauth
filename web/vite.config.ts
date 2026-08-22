@@ -32,6 +32,7 @@ function apiProxy (base: string): Record<string, string | ProxyOptions> {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, path.resolve(__dirname, '..'), '')
   const base = normalizeBase(env.BASE_PATH || process.env.BASE_PATH || '/')
+  const devHost = (process.env.VITE_DEV_HOST || env.VITE_DEV_HOST || '').trim()
 
   return {
     base,
@@ -44,9 +45,19 @@ export default defineConfig(({ mode }) => {
     server: {
       host: '0.0.0.0',
       port: 5173,
+      ...(devHost ? { allowedHosts: [devHost] } : {}),
       watch: {
         usePolling: process.env.CHOKIDAR_USEPOLLING === 'true'
       },
+      ...(devHost
+        ? {
+            hmr: {
+              host: devHost,
+              clientPort: 80,
+              protocol: 'ws'
+            }
+          }
+        : {}),
       proxy: apiProxy(base)
     },
     test: {
