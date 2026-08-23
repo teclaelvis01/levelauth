@@ -1,13 +1,36 @@
-.DS_Store
+# Environment
+.env
+.env.*
+!.env.example
+.env.local
+.env.prod
+
+# Dependencies & package managers
 node_modules/
+.pnpm-store/
+.pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+npm-shrinkwrap.json
+
+# Build / caches
 dist/
 server/dist/
 web/dist/
-.env
-.env.local
-.env.prod
+.cache/
+.turbo/
+coverage/
+
+# App data
 uploads/
-*.log
-npm-shrinkwrap.json
-.pnpm-store/
-pnpm-debug.log*
+
+# OS / IDE / local tooling
+.DS_Store
+.cursor/
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

@@ -41,12 +41,13 @@ export async function createSession (opts: {
   userId: number;
   ip?: string;
   userAgent?: string;
+  provider?: string;
 }): Promise<{ sessionId: string; cookieValue: string; expiresAt: Date }> {
   const expiresAt = new Date(Date.now() + env.sessionTtlHours * 60 * 60 * 1000)
   const session = await prisma.session.create({
     data: {
       userId: opts.userId,
-      provider: 'google',
+      provider: opts.provider || 'google',
       ip: opts.ip || null,
       userAgent: (opts.userAgent || '').slice(0, 512) || null,
       expiresAt,

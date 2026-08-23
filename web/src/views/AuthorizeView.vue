@@ -2,6 +2,7 @@
 import { computed, onMounted, shallowRef } from 'vue'
 import { useRoute } from 'vue-router'
 import AuthErrorNotice from '@/components/AuthErrorNotice.vue'
+import DevLoginForm from '@/components/DevLoginForm.vue'
 import { fetchStatus } from '@/composables/useAuth'
 import { withBase } from '@/lib/base'
 
@@ -19,6 +20,7 @@ const APP_ACCENTS: Record<string, string> = {
 
 const route = useRoute()
 const googleConfigured = shallowRef(false)
+const devLoginEnabled = shallowRef(false)
 const ready = shallowRef(false)
 const redirecting = shallowRef(false)
 const errorCode = shallowRef('')
@@ -37,13 +39,23 @@ const googleHref = computed(() => {
 
 const canContinue = computed(() => Boolean(app.value && redirectUri.value && googleConfigured.value))
 const showGoogleCta = computed(() => canContinue.value && errorCode.value !== 'blocked')
+const canDevLogin = computed(() => Boolean(
+  devLoginEnabled.value && app.value && redirectUri.value
+))
 
 onMounted(async () => {
   const status = await fetchStatus(true)
   googleConfigured.value = status.googleConfigured
+  devLoginEnabled.value = Boolean(status.devLoginEnabled)
   errorCode.value = String(route.query.error || '')
 
   if (errorCode.value || !app.value || !redirectUri.value) {
+    ready.value = true
+    return
+  }
+
+  // Si hay login local, mostrar opciones (no saltar directo a Google).
+  if (devLoginEnabled.value) {
     ready.value = true
     return
   }
@@ -78,7 +90,7 @@ onMounted(async () => {
           v-if="!errorCode"
           class="muted"
         >
-          Inicia sesión con Google para continuar en
+          Inicia sesión para continuar en
           <span
             class="app-pill"
             :class="`app-pill--${appAccent}`"
@@ -99,7 +111,7 @@ onMounted(async () => {
         </p>
 
         <p
-          v-if="!googleConfigured"
+          v-if="!googleConfigured && !devLoginEnabled"
           class="flash flash--error"
         >
           Google OAuth no está configurado en el servidor.
@@ -115,6 +127,20 @@ onMounted(async () => {
           class="btn btn--ghost btn--full"
           :href="googleHref"
         >Reintentar con otra cuenta</a>
+
+        <template v-if="canDevLogin">
+          <p
+            v-if="googleConfigured"
+            class="auth-or"
+          >
+            o
+          </p>
+          <DevLoginForm
+            intent="authorize"
+            :app="app"
+            :redirect-uri="redirectUri"
+          />
+        </template>
       </template>
     </div>
   </div>

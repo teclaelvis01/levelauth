@@ -18,6 +18,8 @@ export type StatusResponse = {
   needsSetup: boolean
   userCount: number
   googleConfigured: boolean
+  /** Login local solo con email (dev). */
+  devLoginEnabled?: boolean
   allowOpenSetup: boolean
   basePath?: string
   user: PublicUser | null

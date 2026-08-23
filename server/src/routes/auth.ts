@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { setCookie, deleteCookie } from 'hono/cookie'
 import { prisma } from '@/db.js'
-import { APPS, env, isGoogleConfigured, type AppId } from '@/env.js'
+import { APPS, env, isDevLoginEnabled, isGoogleConfigured, type AppId } from '@/env.js'
 import {
   SESSION_COOKIE,
   createSession,
@@ -87,10 +87,98 @@ authRoutes.get('/api/status', async (c) => {
     needsSetup: adminCount === 0,
     userCount,
     googleConfigured: isGoogleConfigured(),
+    devLoginEnabled: isDevLoginEnabled(),
     allowOpenSetup: env.allowOpenSetup,
     basePath: env.basePath,
     user: user ? publicUser(user) : null
   })
+})
+
+/**
+ * Login local solo con email (sin Google). Solo si ALLOW_DEV_LOGIN / development.
+ * Body: { email, intent?: 'admin' | 'authorize', app?, redirect_uri? }
+ * Responde { redirect } absoluto o relativo público.
+ */
+authRoutes.post('/api/dev-login', async (c) => {
+  if (!isDevLoginEnabled()) {
+    return c.json({ error: 'dev_login_disabled', message: 'Login por email no disponible.' }, 403)
+  }
+
+  const body = await c.req.json().catch(() => ({})) as {
+    email?: string
+    intent?: 'admin' | 'authorize'
+    app?: string
+    redirect_uri?: string
+  }
+  const email = String(body.email || '').trim().toLowerCase()
+  if (!email || !email.includes('@')) {
+    return c.json({ error: 'invalid_email', message: 'Introduce un correo válido.' }, 400)
+  }
+
+  const intent = body.intent === 'authorize' ? 'authorize' : 'admin'
+  const app = String(body.app || '').trim().toLowerCase()
+  const redirectUri = String(body.redirect_uri || '').trim()
+
+  if (intent === 'authorize') {
+    if (!app || !redirectUri) {
+      return c.json({ error: 'missing_params', message: 'Faltan app o redirect_uri.' }, 400)
+    }
+    if (!isKnownApp(app)) {
+      return c.json({ error: 'invalid_app', message: 'Aplicación no reconocida.' }, 400)
+    }
+    const allowed = env.corsOrigins()
+    try {
+      const origin = new URL(redirectUri).origin
+      if (allowed.length && !allowed.includes(origin)) {
+        return c.json({ error: 'invalid_redirect', message: 'redirect_uri no permitido.' }, 400)
+      }
+    } catch {
+      return c.json({ error: 'invalid_redirect', message: 'redirect_uri inválido.' }, 400)
+    }
+  }
+
+  const user = await prisma.user.findUnique({ where: { email } })
+  if (!user) {
+    return c.json({ error: 'not_provisioned', message: 'Este correo no está dado de alta.' }, 403)
+  }
+  if (user.blockedAt) {
+    return c.json({ error: 'blocked', message: 'Cuenta bloqueada.' }, 403)
+  }
+  if (user.deletedAt) {
+    return c.json({ error: 'deleted', message: 'Cuenta eliminada.' }, 403)
+  }
+
+  const { sessionId, cookieValue, expiresAt } = await createSession({
+    userId: user.id,
+    provider: 'dev',
+    ip: c.req.header('x-forwarded-for') || undefined,
+    userAgent: c.req.header('user-agent') || undefined
+  })
+  const maxAge = Math.max(1, Math.floor((expiresAt.getTime() - Date.now()) / 1000))
+  setCookie(c, SESSION_COOKIE, cookieValue, cookieOpts(maxAge))
+
+  if (intent === 'authorize') {
+    const level = await getAccessLevel(user.id, app)
+    if (level === 'none') {
+      return c.json({ error: 'no_app_access', message: 'Sin acceso a esta aplicación.' }, 403)
+    }
+    const { accessToken, refreshToken } = await issueAppToken({
+      userId: user.id,
+      sessionId,
+      email: user.email,
+      app,
+      level
+    })
+    const dest = new URL(redirectUri)
+    dest.searchParams.set('token', accessToken)
+    dest.searchParams.set('refresh_token', refreshToken)
+    return c.json({ ok: true, redirect: dest.toString() })
+  }
+
+  if (user.role !== 'admin') {
+    return c.json({ error: 'not_admin', message: 'Solo admins pueden entrar al panel.' }, 403)
+  }
+  return c.json({ ok: true, redirect: env.externalPath('/sessions') })
 })
 
 authRoutes.post('/api/setup', async (c) => {
@@ -214,7 +302,9 @@ authRoutes.get('/oauth/authorize', async (c) => {
   const sessionId = c.get('sessionId')
 
   if (!user || !sessionId) {
-    if (isGoogleConfigured()) {
+    // Con login local, mostrar la pantalla de autorización (Google + email).
+    // Sin él y con Google, ir directo a OAuth.
+    if (isGoogleConfigured() && !isDevLoginEnabled()) {
       const params = new URLSearchParams({ intent: 'authorize', app, redirect_uri: redirectUri })
       return c.redirect(redirectTo(`/oauth/google?${params.toString()}`))
     }

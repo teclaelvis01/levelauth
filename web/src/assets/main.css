@@ -467,6 +467,21 @@ th { background: #f7fafc; color: var(--muted); font-size: 0.7rem; }
 
 .form-group { margin-bottom: 14px; }
 .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; }
+.auth-or {
+  margin: 18px 0 12px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.dev-login { margin-top: 4px; }
+.dev-login__label {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+}
 input[type="email"], input[type="text"], input[type="search"], input[type="file"], select {
   width: 100%; height: 44px; border: 1px solid var(--line); border-radius: 8px;
   padding: 0 12px; background: var(--bg); font: inherit;

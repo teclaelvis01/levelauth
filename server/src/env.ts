@@ -87,6 +87,15 @@ export const env = {
   refreshTokenTtlDays: int('REFRESH_TOKEN_TTL_DAYS', 7),
   allowOpenSetup: bool('ALLOW_OPEN_SETUP', false),
   isDev: (process.env.NODE_ENV || 'development') !== 'production',
+  /**
+   * Login local solo con email (sin Google).
+   * En local lo activa docker-compose.yml (ALLOW_DEV_LOGIN=true).
+   * Fallback: ON si NODE_ENV !== production.
+   */
+  allowDevLogin: bool(
+    'ALLOW_DEV_LOGIN',
+    (process.env.NODE_ENV || 'development') !== 'production'
+  ),
 
   /**
    * Orígenes permitidos para clientes OAuth (leveladmin, etc.).
@@ -145,6 +154,10 @@ export const env = {
 
 export function isGoogleConfigured (): boolean {
   return Boolean(env.googleClientId() && env.googleClientSecret())
+}
+
+export function isDevLoginEnabled (): boolean {
+  return env.allowDevLogin
 }
 
 export const APPS = ['erp', 'games', 'setlists'] as const
