@@ -66,13 +66,26 @@ function redirectTo (pathWithQuery: string) {
   return env.externalPath(pathWithQuery)
 }
 
-function authorizeErrorRedirect (app: string, redirectUri: string, error: string) {
-  const params = new URLSearchParams({
-    app,
-    redirect_uri: redirectUri,
-    error
-  })
-  return redirectTo(`/authorize?${params.toString()}`)
+/**
+ * Errores del flujo authorize: devolver al cliente (redirect_uri) con ?error=,
+ * no dejar al usuario atrapado en la UI de AuthLevel.
+ */
+function authorizeErrorRedirect (_app: string, redirectUri: string, error: string) {
+  try {
+    const dest = new URL(redirectUri)
+    const allowed = env.corsOrigins()
+    if (allowed.length && !allowed.includes(dest.origin)) {
+      const params = new URLSearchParams({ app: _app, redirect_uri: redirectUri, error })
+      return redirectTo(`/authorize?${params.toString()}`)
+    }
+    dest.searchParams.delete('token')
+    dest.searchParams.delete('refresh_token')
+    dest.searchParams.set('error', error)
+    return dest.toString()
+  } catch {
+    const params = new URLSearchParams({ app: _app, redirect_uri: redirectUri, error })
+    return redirectTo(`/authorize?${params.toString()}`)
+  }
 }
 
 function isKnownApp (app: string): app is AppId {

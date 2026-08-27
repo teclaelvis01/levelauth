@@ -29,7 +29,7 @@ model User {
 model UserAppAccess {
   id     Int    @id @default(autoincrement())
   userId Int
-  app    String // erp | games | setlists
+  app    String // erp | games | setlists | levelweb
   level  String @default("none") // none | viewer | editor | admin
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 

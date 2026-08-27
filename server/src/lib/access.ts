@@ -1,6 +1,6 @@
 import type { User } from '@prisma/client'
 import { prisma } from '@/db.js'
-import { APPS, type AccessLevel, type AppId, env } from '@/env.js'
+import { APPS, type AccessLevel, type AppId } from '@/env.js'
 import { hashToken, randomToken, signAccessToken, signCookieValue } from '@/lib/crypto.js'
 import {
   notifyAccessRevoked,
@@ -8,6 +8,7 @@ import {
   notifySessionsChanged,
   notifyTokenRevoked
 } from '@/lib/realtime.js'
+import { REFRESH_TOKEN_TTL_DAYS, SESSION_TTL_HOURS } from '@/lib/token-ttl.js'
 
 export const SESSION_COOKIE = 'authlevel_sid'
 
@@ -43,7 +44,7 @@ export async function createSession (opts: {
   userAgent?: string;
   provider?: string;
 }): Promise<{ sessionId: string; cookieValue: string; expiresAt: Date }> {
-  const expiresAt = new Date(Date.now() + env.sessionTtlHours * 60 * 60 * 1000)
+  const expiresAt = new Date(Date.now() + SESSION_TTL_HOURS * 60 * 60 * 1000)
   const session = await prisma.session.create({
     data: {
       userId: opts.userId,
@@ -69,7 +70,7 @@ export async function issueAppToken (opts: {
   level: AccessLevel | string;
 }): Promise<{ accessToken: string; refreshToken: string; tokenId: string }> {
   const refreshToken = randomToken(48)
-  const expiresAt = new Date(Date.now() + env.refreshTokenTtlDays * 24 * 60 * 60 * 1000)
+  const expiresAt = new Date(Date.now() + REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60 * 1000)
   const token = await prisma.appToken.create({
     data: {
       userId: opts.userId,

@@ -463,6 +463,7 @@ th { background: #f7fafc; color: var(--muted); font-size: 0.7rem; }
 .app-pill--erp { background: #fff1e6; color: #e85d04; }
 .app-pill--games { background: #e8f1f8; color: #1a5f8a; }
 .app-pill--setlists { background: #e6f5ef; color: #1b7f5a; }
+.app-pill--levelweb { background: #eef0f8; color: #3d4a8a; }
 .app-pill--default { background: var(--accent-soft); color: var(--accent); }
 
 .form-group { margin-bottom: 14px; }

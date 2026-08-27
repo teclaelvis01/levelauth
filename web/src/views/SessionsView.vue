@@ -166,7 +166,7 @@ onUnmounted(() => {
         Google
       </button>
       <button
-        v-for="app in ['erp', 'games', 'setlists']"
+        v-for="app in ['erp', 'games', 'setlists', 'levelweb']"
         :key="app"
         class="chip"
         :class="{ 'is-active': appFilter === app }"

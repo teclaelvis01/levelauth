@@ -82,9 +82,6 @@ export const env = {
   sessionSecret: () => required('SESSION_SECRET'),
   googleClientId: () => (process.env.GOOGLE_CLIENT_ID || '').trim(),
   googleClientSecret: () => (process.env.GOOGLE_CLIENT_SECRET || '').trim(),
-  sessionTtlHours: int('SESSION_TTL_HOURS', 168),
-  accessTokenTtlMinutes: int('ACCESS_TOKEN_TTL_MINUTES', 15),
-  refreshTokenTtlDays: int('REFRESH_TOKEN_TTL_DAYS', 7),
   allowOpenSetup: bool('ALLOW_OPEN_SETUP', false),
   isDev: (process.env.NODE_ENV || 'development') !== 'production',
   /**
@@ -160,7 +157,7 @@ export function isDevLoginEnabled (): boolean {
   return env.allowDevLogin
 }
 
-export const APPS = ['erp', 'games', 'setlists'] as const
+export const APPS = ['erp', 'games', 'setlists', 'levelweb'] as const
 export type AppId = (typeof APPS)[number]
 export const ACCESS_LEVELS = ['none', 'viewer', 'editor', 'admin'] as const
 export type AccessLevel = (typeof ACCESS_LEVELS)[number]

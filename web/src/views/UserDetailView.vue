@@ -8,7 +8,7 @@ import UserAvatar from '@/components/UserAvatar.vue'
 import { api, applyUserUpdate, fetchStatus, type PublicUser } from '@/composables/useAuth'
 import { watchAdminSessions } from '@/composables/useSessionRealtime'
 
-const APPS = ['erp', 'games', 'setlists'] as const
+const APPS = ['erp', 'games', 'setlists', 'levelweb'] as const
 const LEVELS = ['none', 'viewer', 'editor', 'admin'] as const
 
 type ClientInfo = {

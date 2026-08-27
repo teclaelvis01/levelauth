@@ -5,7 +5,7 @@ import AdminShell from '@/components/AdminShell.vue'
 import PhotoCropModal from '@/components/PhotoCropModal.vue'
 import { api, fetchStatus, type PublicUser } from '@/composables/useAuth'
 
-const APPS = ['erp', 'games', 'setlists'] as const
+const APPS = ['erp', 'games', 'setlists', 'levelweb'] as const
 const LEVELS = ['none', 'viewer', 'editor', 'admin'] as const
 
 const router = useRouter()

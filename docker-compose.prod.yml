@@ -43,9 +43,6 @@ services:
       SESSION_SECRET: ${SESSION_SECRET}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-      SESSION_TTL_HOURS: ${SESSION_TTL_HOURS:-168}
-      ACCESS_TOKEN_TTL_MINUTES: ${ACCESS_TOKEN_TTL_MINUTES:-15}
-      REFRESH_TOKEN_TTL_DAYS: ${REFRESH_TOKEN_TTL_DAYS:-7}
       ALLOW_OPEN_SETUP: ${ALLOW_OPEN_SETUP:-false}
       WEB_DIST: /app/web/dist
     # Coolify/Traefik habla por la red Docker; no hace falta publicar al host.

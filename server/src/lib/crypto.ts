@@ -1,6 +1,7 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto'
 import { SignJWT, jwtVerify } from 'jose'
 import { env } from '@/env.js'
+import { ACCESS_TOKEN_TTL_MINUTES } from '@/lib/token-ttl.js'
 
 function secretKey (): Uint8Array {
   return new TextEncoder().encode(env.jwtSecret())
@@ -24,7 +25,7 @@ export type AccessClaims = {
 }
 
 export async function signAccessToken (claims: AccessClaims): Promise<string> {
-  const ttl = `${env.accessTokenTtlMinutes}m`
+  const ttl = `${ACCESS_TOKEN_TTL_MINUTES}m`
   return new SignJWT({
     email: claims.email,
     app: claims.app,

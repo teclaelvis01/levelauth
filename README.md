@@ -52,6 +52,33 @@ docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
 | `/sessions` | Tokens activos |
 | `/users` | Listado + ficha + foto |
 
+### Apps SSO (`UserAppAccess.app`)
+
+| App | Cliente |
+|-----|---------|
+| `erp` | leveladmin |
+| `games` | Games |
+| `setlists` | Setlists |
+| `levelweb` | levelweb `/campistas` (líderes vía Google) |
+
+Para Level Web: crea el usuario en AuthLevel, asigna `levelweb` ≥ `viewer`,
+y asegúrate de que el mismo email exista en `people` (CRM). El origen de
+levelweb debe estar en `CORS_ORIGINS`.
+
+### Tokens (seguridad)
+
+TTLs **fijos en código** (`server/src/lib/token-ttl.ts`), no por `.env`:
+
+| Token | Valor | Uso |
+|-------|-------|-----|
+| Access JWT | **15 min** | Corto a propósito |
+| Refresh | **7 días** | Solo para `/oauth/refresh` |
+| Cookie sesión AuthLevel | **168 h** (7 días) | Panel admin |
+
+Los clientes SSO (**leveladmin**, **levelweb**) **deben** renovar el access JWT
+caducado con `POST /oauth/refresh` (leveladmin ya lo hace en `apiFetch`;
+levelweb en `ensureCamperSession` / `camperAuthFetch`).
+
 Pinia no se usa: el estado de sesión vive en cookie HttpOnly + `fetchStatus()` en `useAuth`.
 
 ## Migraciones (Prisma)

@@ -9,13 +9,15 @@ import { withBase } from '@/lib/base'
 const APP_LABELS: Record<string, string> = {
   erp: 'Admin Level',
   games: 'Games',
-  setlists: 'Setlists'
+  setlists: 'Setlists',
+  levelweb: 'Level Web'
 }
 
 const APP_ACCENTS: Record<string, string> = {
   erp: 'erp',
   games: 'games',
-  setlists: 'setlists'
+  setlists: 'setlists',
+  levelweb: 'levelweb'
 }
 
 const route = useRoute()
