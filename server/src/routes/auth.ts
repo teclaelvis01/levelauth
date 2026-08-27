@@ -49,6 +49,23 @@ function absoluteAvatarUrl (avatarUrl: string | null): string | null {
   return env.publicUrl(avatarUrl.startsWith('/') ? avatarUrl : `/${avatarUrl}`)
 }
 
+/** Foto de Google (userinfo.picture). No debe pisar avatares subidos en admin. */
+function isGoogleAvatarUrl (url: string | null | undefined): boolean {
+  return typeof url === 'string' && /googleusercontent\.com|ggpht\.com/i.test(url)
+}
+
+/**
+ * Conserva foto custom (p. ej. /uploads/avatars/...).
+ * Solo rellena o refresca con Google si no hay avatar o el actual ya era de Google.
+ */
+function resolveAvatarOnGoogleLogin (
+  existing: string | null,
+  googleAvatarUrl: string
+): string | null {
+  if (existing && !isGoogleAvatarUrl(existing)) return existing
+  return googleAvatarUrl || existing || null
+}
+
 function publicUser (user: { id: number, email: string, name: string, avatarUrl: string | null, role: string, blockedAt: Date | null, deletedAt?: Date | null, googleSub: string | null }) {
   return {
     id: user.id,
@@ -270,7 +287,7 @@ authRoutes.get('/oauth/google/callback', async (c) => {
     data: {
       googleSub: profile.sub,
       name: profile.name || user.name,
-      avatarUrl: profile.avatarUrl || user.avatarUrl
+      avatarUrl: resolveAvatarOnGoogleLogin(user.avatarUrl, profile.avatarUrl)
     }
   })
 
