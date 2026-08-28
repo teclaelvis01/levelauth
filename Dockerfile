@@ -1,13 +1,14 @@
 # ---- build ----
 FROM node:22-bookworm-slim AS build
 WORKDIR /app
+ENV CI=true
 # Prefijo público (Coolify folder). Vacío o `/` = raíz del host.
 ARG BASE_PATH=
 ENV BASE_PATH=$BASE_PATH
 RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates \
   && rm -rf /var/lib/apt/lists/* \
   && corepack enable && corepack prepare pnpm@11.21.0 --activate
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
 COPY server/package.json ./server/
 COPY web/package.json ./web/
 COPY prisma ./prisma
@@ -21,15 +22,16 @@ RUN PRISMA_GENERATE_SKIP_AUTOINSTALL=1 pnpm exec prisma generate \
 # ---- runtime ----
 FROM node:22-bookworm-slim AS runtime
 WORKDIR /app
+ENV CI=true
 ENV NODE_ENV=production
 ENV WEB_DIST=/app/web/dist
 ARG BASE_PATH=
 ENV BASE_PATH=$BASE_PATH
 RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates \
   && rm -rf /var/lib/apt/lists/* \
-  && mkdir -p /app/uploads/avatars \
+  && mkdir -p /app/server/uploads/avatars \
   && corepack enable && corepack prepare pnpm@11.21.0 --activate
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
 COPY server/package.json ./server/
 COPY web/package.json ./web/
 COPY prisma ./prisma
@@ -45,5 +47,7 @@ COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 WORKDIR /app/server
 EXPOSE 3100
+HEALTHCHECK --interval=10s --timeout=5s --start-period=60s --retries=5 \
+  CMD node -e "fetch('http://127.0.0.1:3100/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["node", "dist/index.js"]

@@ -1,6 +1,4 @@
 import { Hono } from 'hono'
-import { mkdir, writeFile } from 'node:fs/promises'
-import path from 'node:path'
 import { prisma } from '@/db.js'
 import { APPS, ACCESS_LEVELS, env, type AccessLevel } from '@/env.js'
 import {
@@ -14,6 +12,7 @@ import { parseUserAgent } from '@/lib/user-agent.js'
 import { paginationMeta, parsePagination } from '@/lib/pagination.js'
 import type { AuthVars } from '@/middleware/session.js'
 import { requireAdmin } from '@/middleware/session.js'
+import { deleteAvatar, putAvatar } from '@/storage/avatarStorage.js'
 
 export const adminRoutes = new Hono<{ Variables: AuthVars }>()
 
@@ -221,11 +220,15 @@ async function saveAvatar (file: File | undefined): Promise<string | null> {
     throw new Error('Tipo de imagen no permitido')
   }
   const ext = type.split('/')[1] === 'jpeg' ? 'jpg' : type.split('/')[1]
-  const dir = path.join(process.cwd(), 'uploads', 'avatars')
-  await mkdir(dir, { recursive: true })
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-  await writeFile(path.join(dir, filename), Buffer.from(await file.arrayBuffer()))
+  await putAvatar(filename, Buffer.from(await file.arrayBuffer()))
   return `/uploads/avatars/${filename}`
+}
+
+function filenameFromAvatarUrl (url: string | null | undefined): string | null {
+  if (!url || !url.startsWith('/uploads/avatars/')) return null
+  const name = url.slice('/uploads/avatars/'.length)
+  return /^[a-zA-Z0-9._-]+\.(jpe?g|png|webp|gif)$/i.test(name) ? name : null
 }
 
 adminRoutes.post('/users', async (c) => {
@@ -303,11 +306,15 @@ adminRoutes.put('/users/:id', async (c) => {
 
 adminRoutes.post('/users/:id/avatar', async (c) => {
   const id = Number(c.req.param('id'))
+  const existing = await prisma.user.findUnique({ where: { id } })
+  if (!existing) return c.json({ error: 'not_found' }, 404)
   const form = await c.req.parseBody()
   try {
     const avatarUrl = await saveAvatar(form.avatar as File | undefined)
     if (!avatarUrl) return c.json({ error: 'missing_avatar' }, 400)
+    const prev = filenameFromAvatarUrl(existing.avatarUrl)
     const user = await prisma.user.update({ where: { id }, data: { avatarUrl }, include: { access: true } })
+    if (prev) await deleteAvatar(prev)
     return c.json({ user: publicUser(user) })
   } catch (e) {
     return c.json({ error: e instanceof Error ? e.message : 'avatar_error' }, 400)
@@ -316,7 +323,11 @@ adminRoutes.post('/users/:id/avatar', async (c) => {
 
 adminRoutes.delete('/users/:id/avatar', async (c) => {
   const id = Number(c.req.param('id'))
+  const existing = await prisma.user.findUnique({ where: { id } })
+  if (!existing) return c.json({ error: 'not_found' }, 404)
+  const prev = filenameFromAvatarUrl(existing.avatarUrl)
   const user = await prisma.user.update({ where: { id }, data: { avatarUrl: null }, include: { access: true } })
+  if (prev) await deleteAvatar(prev)
   return c.json({ user: publicUser(user) })
 })
 

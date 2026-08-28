@@ -9,6 +9,8 @@
 #   - APP_URL=https://levelcross.iglesiasalem.com/auth
 #   - Google redirect: https://levelcross.iglesiasalem.com/auth/oauth/google/callback
 #   - Red: coolify (external) — sin ella Traefik da 502
+#   - Rolling updates: sin container_name ni Custom Container Name en Coolify
+#   - Healthcheck: GET /health (puerto 3100)
 #
 # Subdominio futuro (auth.iglesiasalem.com o *.iglesiasalem.com):
 #   - BASE_PATH=   (vacío)
@@ -23,8 +25,8 @@ services:
       args:
         BASE_PATH: ${BASE_PATH:-/auth}
     image: authlevel:prod
-    container_name: authlevel-app-prod
     restart: always
+    stop_grace_period: 30s
     environment:
       NODE_ENV: production
       PORT: "3100"
@@ -45,13 +47,31 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       ALLOW_OPEN_SETUP: ${ALLOW_OPEN_SETUP:-false}
       WEB_DIST: /app/web/dist
+      STORAGE_DRIVER: ${STORAGE_DRIVER:-r2}
+      STORAGE_FALLBACK_LOCAL: ${STORAGE_FALLBACK_LOCAL:-true}
+      R2_KEY_PREFIX: ${R2_KEY_PREFIX:-}
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID:-}
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID:-}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY:-}
+      R2_BUCKET: ${R2_BUCKET:-}
+      R2_ENDPOINT: ${R2_ENDPOINT:-}
+      UPLOADS_DIR: /app/server/uploads
     # Coolify/Traefik habla por la red Docker; no hace falta publicar al host.
     expose:
       - "3100"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3100/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
     volumes:
-      - authlevel_uploads_prod:/app/uploads
+      # Alineado con WORKDIR /app/server (cwd del proceso)
+      - authlevel_uploads_prod:/app/server/uploads
     networks:
-      - coolify
+      coolify:
+        aliases:
+          - levelauth
 
 volumes:
   authlevel_uploads_prod:

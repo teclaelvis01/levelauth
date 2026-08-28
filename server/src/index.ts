@@ -12,6 +12,13 @@ import { loadSession, type AuthVars } from '@/middleware/session.js'
 import { adminRoutes } from '@/routes/admin.js'
 import { authRoutes } from '@/routes/auth.js'
 import { attachRealtime } from '@/routes/realtime.js'
+import {
+  ensureUploadsDirs,
+  getAvatar,
+  isSafeAvatarFilename,
+  r2KeyPrefix,
+  storageDriver,
+} from '@/storage/avatarStorage.js'
 
 const app = new Hono<{ Variables: AuthVars }>()
 
@@ -35,7 +42,31 @@ app.use('*', cors({
 app.use('*', loadSession)
 
 const { injectWebSocket } = attachRealtime(app)
-app.use('/uploads/*', serveStatic({ root: './' }))
+
+function avatarContentType (filename: string): string {
+  if (filename.endsWith('.png')) return 'image/png'
+  if (filename.endsWith('.webp')) return 'image/webp'
+  if (filename.endsWith('.gif')) return 'image/gif'
+  return 'image/jpeg'
+}
+
+app.get('/uploads/avatars/:filename', async (c) => {
+  const filename = c.req.param('filename')
+  if (!isSafeAvatarFilename(filename)) {
+    return c.json({ error: 'not_found' }, 404)
+  }
+  const buf = await getAvatar(filename)
+  if (!buf) return c.json({ error: 'not_found' }, 404)
+  return new Response(new Uint8Array(buf), {
+    status: 200,
+    headers: {
+      'Content-Type': avatarContentType(filename),
+      'Cache-Control': 'public, max-age=86400',
+      'X-Content-Type-Options': 'nosniff',
+      'Content-Disposition': 'inline',
+    },
+  })
+})
 
 app.route('/', authRoutes)
 app.route('/api/admin', adminRoutes)
@@ -45,7 +76,9 @@ app.get('/health', (c) => c.json({
   service: 'authlevel',
   googleConfigured: isGoogleConfigured(),
   basePath: env.basePath,
-  appUrl: env.appUrl()
+  appUrl: env.appUrl(),
+  storageDriver: storageDriver(),
+  r2KeyPrefix: r2KeyPrefix() || null,
 }))
 
 function resolveWebDist (): string {
@@ -98,10 +131,13 @@ app.get('*', async (c) => {
 
 const port = env.port
 const hostname = process.env.HOST || '0.0.0.0'
+await ensureUploadsDirs()
 console.log(
   `authlevel API on http://${hostname}:${port}` +
   `${env.basePath ? ` · BASE_PATH=${env.basePath}` : ''}` +
-  `${webDevUrl ? ` · SPA (HMR) → ${webDevUrl}` : ` · SPA → ${webDist}`}`
+  `${webDevUrl ? ` · SPA (HMR) → ${webDevUrl}` : ` · SPA → ${webDist}`}` +
+  ` · STORAGE_DRIVER=${storageDriver()}` +
+  (storageDriver() === 'r2' ? ` · R2_KEY_PREFIX=${r2KeyPrefix() || '(root)'}` : '')
 )
 const server = serve({ fetch: app.fetch, port, hostname })
 injectWebSocket(server)

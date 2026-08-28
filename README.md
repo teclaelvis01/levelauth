@@ -42,6 +42,28 @@ cp .env.prod.example .env.prod
 docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
 ```
 
+Coolify: red `coolify`, puerto **3100**, **Custom Container Name vacío** (rolling updates). Alias interno `levelauth` en la red Docker.
+
+### Storage (avatares → Cloudflare R2)
+
+Mismas variables que **leveladmin-api** (mismo bucket; prefijo compartido recomendado):
+
+| Variable | Descripción |
+|----------|-------------|
+| `STORAGE_DRIVER` | `local` (solo volumen) o `r2` |
+| `STORAGE_FALLBACK_LOCAL` | Con `r2`: espejo local + fallback si R2 falla (default `true`) |
+| `R2_KEY_PREFIX` | Prefijo en el bucket, p. ej. `levelcross/level-dev/` o `levelcross/level-prod/` |
+| `R2_ACCOUNT_ID` | Account ID Cloudflare |
+| `R2_ACCESS_KEY_ID` | Access key R2 |
+| `R2_SECRET_ACCESS_KEY` | Secret key R2 |
+| `R2_BUCKET` | Nombre del bucket |
+| `R2_ENDPOINT` | `https://<accountid>.r2.cloudflarestorage.com` |
+| `UPLOADS_DIR` | Raíz local (default `{cwd}/uploads`; Docker dev: `/app/server/uploads`) |
+
+Objetos AuthLevel: `{R2_KEY_PREFIX}auth/avatars/<file>`. Level Admin usa `{R2_KEY_PREFIX}avatars/`, `gallery/`, etc.
+
+En dev con `pnpm dev:docker`, pasa las `R2_*` en `.env` (el compose las reenvía al contenedor).
+
 ## UI
 
 | Ruta | Vista Vue |

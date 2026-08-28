@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
 cd /app
+export CI=true
 
 if [ ! -d node_modules/.pnpm ]; then
   echo "Installing dependencies..."
